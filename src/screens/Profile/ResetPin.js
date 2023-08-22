@@ -7,7 +7,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { TextField, Button, Divider, BackButton } from "../../components";
+import {
+  TextField,
+  Button,
+  Divider,
+  BackButton,
+  BoxTextField,
+} from "../../components";
 import { AndroidSafeArea, COLORS } from "../../constants/theme";
 import { useNavigation } from "@react-navigation/native";
 import { useForm, Controller } from "react-hook-form";
@@ -17,6 +23,10 @@ import { savePin } from "../../store/slice/authSlice";
 const ResetPin = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  // const [pin, setPin] = useState("");
+  // const [check, setCheck] = useState("");
+  // const [disable, setDisable] = useState(false);
+  // const [error, setError] = useState(false);
   const password = useSelector((state) => state.auth.pin);
   const {
     handleSubmit,
@@ -24,6 +34,15 @@ const ResetPin = () => {
     formState: { errors },
     getValues,
   } = useForm();
+
+  // const handlePinComplete = (code) => {
+  //   setPin(code);
+  //   setDisable(true);
+  // };
+
+  // const handleCheckComplete = (code) => {
+  //   setCheck(code);
+  // };
 
   const onSubmit = (data) => {
     if (data.oldPin === password && data.newPin === data.reenterNewPin) {
@@ -39,6 +58,27 @@ const ResetPin = () => {
   function renderContent() {
     return (
       <View style={{ marginHorizontal: 16, marginVertical: 40 }}>
+        {/* <Text style={styles.contentTitle}>Enter 4 digit PIN</Text>
+        <View style={{ marginBottom: 16 }}>
+          <View>
+            <BoxTextField
+              pin={pin}
+              setPin={setPin}
+              length={4}
+              onComplete={handlePinComplete}
+              error={error}
+              cellStyle={{width: 76, height: 56}}
+            />
+          </View>
+          {error && (
+            <Text style={{ ...styles.contentPara, color: COLORS.Error }}>
+              Old Pin do
+            </Text>
+          )}
+        </View>
+        <TouchableOpacity onPress={() => navigation.navigate("ForgotPin")}>
+          <Text style={styles.resend}>Forgot Pin</Text>
+        </TouchableOpacity> */}
         <Controller
           control={control}
           name="oldPin"

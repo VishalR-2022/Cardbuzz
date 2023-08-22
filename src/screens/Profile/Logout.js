@@ -5,21 +5,12 @@ import {
   View,
   Modal,
   Text,
-  Touchable,
   TouchableOpacity,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import {
-  TextField,
-  Button,
-  Divider,
-  BackButton,
-  ArrowButton,
-} from "../../components";
+import { BackButton, ArrowButton } from "../../components";
 import { AndroidSafeArea, COLORS } from "../../constants/theme";
 import { useNavigation } from "@react-navigation/native";
-import Notification from "./../../svg/Notification";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 
 const Logout = () => {
   const navigation = useNavigation();
@@ -35,7 +26,7 @@ const Logout = () => {
         <ArrowButton text="Logout" onPress={() => setOpen(true)} />
         <ArrowButton
           text="Delete Account"
-          onPress={() => navigation.navigate("")}
+          onPress={() => navigation.navigate("OnBoarding")}
         />
       </View>
     );
@@ -100,7 +91,12 @@ const Logout = () => {
                   </Text>
                 </TouchableOpacity>
                 <View style={styles.verticalLine} />
-                <TouchableOpacity onPress={() => setOpen(false)}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setOpen(false);
+                    navigation.navigate("OnBoarding");
+                  }}
+                >
                   <Text
                     style={{
                       textAlign: "center",

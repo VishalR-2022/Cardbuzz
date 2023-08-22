@@ -45,7 +45,7 @@ const VerificationOtpSignUp = () => {
   function renderContent() {
     return (
       <View>
-        <Text style={styles.contentTitle}>Sign Up</Text>
+        <Text style={styles.contentTitle}>Sign In</Text>
         <View>
           <BoxTextField
             pin={pin}

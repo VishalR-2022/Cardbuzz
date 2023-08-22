@@ -11,6 +11,8 @@ const PinInput = ({
   justifyContent = "center",
   disable = true,
   error = false,
+  cellSpacing = 8,
+  cellStyle = {},
 }) => {
   // const [pin, setPin] = useState("");
 
@@ -25,7 +27,7 @@ const PinInput = ({
     <View style={{ flexDirection: "row", justifyContent: justifyContent }}>
       <PinCodeInput
         editable={disable}
-        cellSpacing={8}
+        cellSpacing={cellSpacing}
         password
         mask="﹡"
         codeLength={length}
@@ -40,6 +42,7 @@ const PinInput = ({
           borderWidth: 1,
           borderColor: error ? COLORS.Error : "#dddd",
           padding: 8,
+          ...cellStyle,
         }}
       />
     </View>

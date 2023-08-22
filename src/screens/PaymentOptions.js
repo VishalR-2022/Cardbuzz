@@ -135,69 +135,6 @@ const PaymentOptions = () => {
             </View>
           </View>
         </View>
-        <Text style={{ fontWeight: "600", fontSize: 14, marginTop: 12 }}>
-          More Payment Options
-        </Text>
-        {morePaymentOptions.map((option) => (
-          <View
-            key={option.id}
-            style={{
-              marginVertical: 8,
-              borderRadius: 8,
-            }}
-          >
-            <View style={styles.searchBar}>
-              <View>{option.icon}</View>
-              <View style={styles.walletContainer}>
-                <Text style={styles.contentTitle}>{option.label}</Text>
-              </View>
-              <CheckBox
-                checked={isSelectedWallet === option.id}
-                onPress={() => setSelectionWallet(option.id)}
-                checkedColor={COLORS.Primary}
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-              />
-            </View>
-          </View>
-        ))}
-        <View
-          style={{
-            marginVertical: 8,
-            borderRadius: 8,
-          }}
-        >
-          <View style={{ ...styles.searchBar, paddingVertical: 10 }}>
-            <View>
-              <Bank />
-            </View>
-            <View style={styles.walletContainer}>
-              <Text style={styles.contentTitle}>EMI (Easy Instalments)</Text>
-            </View>
-            <View style={{ paddingRight: 25 }}>
-              <Image source={require("../assets/images/arrowRight.png")} />
-            </View>
-          </View>
-        </View>
-        <View
-          style={{
-            marginVertical: 8,
-            borderRadius: 8,
-            marginBottom: 20,
-          }}
-        >
-          <View style={{ ...styles.searchBar, paddingVertical: 10 }}>
-            <View>
-              <Bank />
-            </View>
-            <View style={styles.walletContainer}>
-              <Text style={styles.contentTitle}>Pay Later</Text>
-            </View>
-            <View style={{ paddingRight: 25 }}>
-              <Image source={require("../assets/images/arrowRight.png")} />
-            </View>
-          </View>
-        </View>
       </View>
     );
   }

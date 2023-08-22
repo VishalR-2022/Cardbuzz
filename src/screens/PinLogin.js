@@ -27,7 +27,7 @@ const PinLogin = () => {
     if (pin !== null) {
       if (pin === password) {
         navigation.navigate("AddDetails");
-        setPin('');
+        setPin("");
         setDisable(false);
         setError(null);
       } else {
@@ -42,7 +42,7 @@ const PinLogin = () => {
         style={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          marginHorizontal: 16,
         }}
       >
         <Text style={styles.contentTitle}>Enter 4 digit PIN</Text>
@@ -54,6 +54,7 @@ const PinLogin = () => {
               length={4}
               onComplete={handlePinComplete}
               error={error}
+              cellStyle={{ width: 76, height: 56 }}
             />
           </View>
           {error && (
