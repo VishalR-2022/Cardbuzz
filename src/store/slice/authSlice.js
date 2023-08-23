@@ -30,3 +30,45 @@ const authSlice = createSlice({
 
 export const { login, logout, saveImageUrl, savePin } = authSlice.actions;
 export default authSlice.reducer;
+
+// ----------------keychain--------------------
+
+
+// --------------- create storage in root/helper folder
+
+// import * as Keychain from 'react-native-keychain';
+
+// export const saveToken = async (token: string) => {
+//   try {
+//     await Keychain.setInternetCredentials('apiToken', 'apiKey', token);
+//     console.log('Token saved successfully');
+//   } catch (error) {
+//     console.log('Error saving token:', error);
+//   }
+// };
+
+// export const retrieveToken = async () => {
+//   try {
+//     const credentials = await Keychain.getInternetCredentials('apiToken');
+//     if (credentials) {
+//       const token = credentials.password;
+// return token;
+//     } else {
+//       console.log('No token found');
+//       return null;
+//     }
+//   } catch (error) {
+//     console.log('Error retrieving token:', error);
+//     return null;
+//   }
+// };
+
+// export const removeToken = async () => {
+//   try {
+//     await Keychain.resetInternetCredentials('apiToken');
+//     return true;
+//   } catch (error) {
+//     console.log('Error retrieving token:', error);
+//     return false;
+//   }
+// };

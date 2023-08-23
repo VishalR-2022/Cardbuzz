@@ -22,14 +22,14 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.vishal20.cardbuzz"
+      "package": "com.developerhm.cardbuzz"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "43bd8b00-c4ab-4e65-a1f8-9bf7491e3d20"
+        "projectId": "c071716c-6d05-4ba0-ad07-b8e53a1e3f69"
       }
     }
   }

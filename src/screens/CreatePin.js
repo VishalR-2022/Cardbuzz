@@ -62,7 +62,7 @@ const CreatePin = ({ route }) => {
               setPin={setPin}
               length={4}
               onComplete={handlePinComplete}
-              cellStyle={{ width: 76, height: 56 }}
+              justifyContent="flex-start"
             />
           </View>
         </View>
@@ -74,7 +74,7 @@ const CreatePin = ({ route }) => {
               setPin={setCheck}
               length={4}
               onComplete={handleCheckComplete}
-              cellStyle={{ width: 76, height: 56 }}
+              justifyContent="flex-start"
               disable={disable}
               error={error}
             />

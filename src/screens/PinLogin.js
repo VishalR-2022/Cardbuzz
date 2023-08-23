@@ -42,7 +42,7 @@ const PinLogin = () => {
         style={{
           display: "flex",
           justifyContent: "center",
-          marginHorizontal: 16,
+          alignItems: "center",
         }}
       >
         <Text style={styles.contentTitle}>Enter 4 digit PIN</Text>
@@ -54,7 +54,6 @@ const PinLogin = () => {
               length={4}
               onComplete={handlePinComplete}
               error={error}
-              cellStyle={{ width: 76, height: 56 }}
             />
           </View>
           {error && (

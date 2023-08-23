@@ -172,9 +172,9 @@ const PaymentOptions = () => {
         <Divider />
         {renderContent()}
         {renderUpiPayment()}
-        <Divider />
-        {renderFooter()}
       </KeyboardAwareScrollView>
+      <Divider />
+      {renderFooter()}
     </SafeAreaView>
   );
 };
