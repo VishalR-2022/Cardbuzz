@@ -1,18 +1,39 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { View, Text, StyleSheet, SafeAreaView, Share } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AndroidSafeArea, COLORS } from "../../constants/theme";
 import { Button, BackButton } from "../../components";
-import { useNavigation } from "@react-navigation/native";
 import QRCode from "react-native-qrcode-svg";
 import * as Sharing from "expo-sharing";
 import { captureRef } from "react-native-view-shot";
 import ViewShot from "react-native-view-shot"; // Import the react-native-view-shot library
+import RNFetchBlob from "rn-fetch-blob";
 
 const QrCashWithdrawal = () => {
   const svgRef = useRef(null);
+  const [qrCodeRef, setQrCodeRef] = useState(null);
+  const [qrCodeText, setQrCodeText] = useState('CashWithdrawal');
+  const downloadQrcode = () => {
+    try {
+      // alert('hello');
+      qrCodeRef.toDataURL(async (data) => {
+        // console.log(data);
+        const path =
+          RNFetchBlob.fs.dirs.DownloadDir +
+          `/${qrCodeText
+            .replace("http", "")
+            .replace("://", "a")
+            .replace(".", "_")
+            .slice(0, 20)}_${new Date().getMilliseconds()}.png`;
 
-  const navigation = useNavigation();
+        await RNFetchBlob.fs.writeFile(path, data, "base64");
+
+        alert("Download Successfully");
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const saveQRCode = async () => {
     try {
@@ -46,6 +67,7 @@ const QrCashWithdrawal = () => {
             logoSize={30}
             size={300}
             logoBackgroundColor="transparent"
+            getRef={(ref) => setQrCodeRef(ref)}
           />
         </View>
       </ViewShot>
@@ -68,9 +90,7 @@ const QrCashWithdrawal = () => {
         <Button
           text="Download QR"
           width={"100%"}
-          onPress={() => {
-            navigation.navigate("Home");
-          }}
+          onPress={downloadQrcode}
         />
       </View>
     </SafeAreaView>

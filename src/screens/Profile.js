@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   StyleSheet,
@@ -6,16 +6,11 @@ import {
   View,
   TouchableOpacity,
   Image,
+  Modal,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import {
-  TextField,
-  Button,
-  Divider,
-  ArrowButton,
-  BackButton,
-} from "../components";
+import { Divider, ArrowButton, BackButton } from "../components";
 import { AndroidSafeArea, COLORS } from "../constants/theme";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
@@ -25,6 +20,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 const Profile = () => {
   const navigation = useNavigation();
   const { showActionSheetWithOptions } = useActionSheet();
+  const [open, setOpen] = useState(false);
 
   const image = useSelector((state) => state.auth.imageUrl);
   const name = useSelector((state) => state.user.fullName);
@@ -158,10 +154,7 @@ const Profile = () => {
           text="Privacy Policy"
           onPress={() => navigation.navigate("PrivacyPolicy")}
         />
-        <ArrowButton
-          text="Logout"
-          onPress={() => navigation.navigate("Logout")}
-        />
+        <ArrowButton text="Logout" onPress={() => setOpen(true)} />
       </View>
     );
   }
@@ -181,6 +174,75 @@ const Profile = () => {
         {renderContent()}
         <Divider width={15} />
         {renderButtons()}
+        {open && (
+          <View
+            style={{
+              ...StyleSheet.absoluteFill,
+              backgroundColor: "#0216384D", // Semi-transparent black layer
+            }}
+          />
+        )}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={open}
+          onRequestClose={() => {
+            setOpen(false);
+          }}
+        >
+          <View style={styles.model}>
+            <View style={styles.content}>
+              <Text style={styles.headerTitle}>
+                Do you really want to sign out of your account?
+              </Text>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                  borderTopWidth: 1,
+                  width: "100%",
+                  borderColor: COLORS.TextGray,
+                }}
+              >
+                <TouchableOpacity onPress={() => setOpen(false)}>
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      paddingHorizontal: 16,
+                      paddingVertical: 12,
+                      fontSize: 16,
+                      fontWeight: "600",
+                      color: COLORS.TextGray,
+                    }}
+                  >
+                    Cancel
+                  </Text>
+                </TouchableOpacity>
+                <View style={styles.verticalLine} />
+                <TouchableOpacity
+                  onPress={() => {
+                    setOpen(false);
+                    navigation.navigate("OnBoarding");
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      paddingVertical: 12,
+                      fontSize: 16,
+                      fontWeight: "600",
+                      color: COLORS.Error,
+                      paddingHorizontal: 16,
+                    }}
+                  >
+                    Log Out
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );
@@ -240,6 +302,47 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     lineHeight: 22,
     color: COLORS.TextDark,
+  },
+  model: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  content: {
+    borderRadius: 20,
+    overflow: "hidden",
+    backgroundColor: COLORS.White,
+    width: 300,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 16,
+  },
+  headerTitle: {
+    fontSize: 18,
+    color: COLORS.TextDark,
+    fontWeight: "600",
+    marginBottom: 16,
+    textAlign: "center",
+    marginHorizontal: 16,
+  },
+  headerPara: {
+    fontWeight: "400",
+    fontSize: 14,
+    lineHeight: 22,
+    color: COLORS.TextGray,
+    textAlign: "center",
+    marginBottom: 16,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+  },
+  verticalLine: {
+    height: "100%",
+    width: 1,
+    backgroundColor: COLORS.TextGray,
   },
 });
 

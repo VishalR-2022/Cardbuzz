@@ -60,6 +60,16 @@ const AddUpiId = () => {
         {errors.upiId && (
           <Text style={styles.errorText}>{errors.upiId.message}</Text>
         )}
+        <View
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginVertical: 20,
+            marginTop: 30,
+          }}
+        >
+          <Image source={require("../assets/images/upiLogos.png")} />
+        </View>
       </View>
     );
   }

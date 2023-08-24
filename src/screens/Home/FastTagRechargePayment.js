@@ -68,6 +68,16 @@ const FastTagRechargePayment = () => {
         {renderTop()}
         {renderData()}
       </KeyboardAwareScrollView>
+      <View
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginVertical: 20,
+            marginTop: 20,
+          }}
+        >
+          <Image source={require("../../assets/images/BBPS.png")} />
+        </View>
       <View style={{ marginHorizontal: 16, marginBottom: 20 }}>
         <Button
           text={"Proceed"}

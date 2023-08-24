@@ -261,7 +261,14 @@ const KycForm = () => {
             )}
           </View>
           <View style={styles.uploadPan}>
-            <Image source={require("../assets/images/pancard.png")} />
+            {panUrl ? (
+              <Image
+                source={{ uri: panUrl }}
+                style={{ width: 120, height: 72 }}
+              />
+            ) : (
+              <Image source={require("../assets/images/pancard.png")} />
+            )}
             <View style={{ flex: 1, justifyContent: "center", marginLeft: 30 }}>
               <Text
                 style={{

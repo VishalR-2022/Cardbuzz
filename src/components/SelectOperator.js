@@ -103,7 +103,18 @@ const SelectOperator = ({ data, backButtonText, navigate, onPress }) => {
             />
           </View>
         </View>
+        <Divider color="#DDDDDD" />
       </KeyboardAwareScrollView>
+      <View
+        style={{
+          display: "flex",
+          alignItems: "center",
+          marginVertical: 10,
+          marginTop: 20,
+        }}
+      >
+        <Image source={require("../assets/images/BBPS.png")} />
+      </View>
     </SafeAreaView>
   );
 };
@@ -124,11 +135,6 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: COLORS.White,
     marginVertical: 20,
-  },
-  searchIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
   },
   searchInput: {
     flex: 1,

@@ -76,6 +76,15 @@ const NavigateRecharge = ({
         {renderData()}
       </KeyboardAwareScrollView>
       <View style={{ marginHorizontal: 16, marginBottom: 10 }}>
+        <View
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginVertical: 20,
+          }}
+        >
+          <Image source={require("../assets/images/BBPS.png")} />
+        </View>
         <Button text={buttonText} width={"100%"} onPress={onPress} />
       </View>
     </SafeAreaView>

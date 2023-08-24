@@ -24,10 +24,10 @@ const Logout = () => {
     return (
       <View style={{ marginTop: 40 }}>
         <ArrowButton text="Logout" onPress={() => setOpen(true)} />
-        <ArrowButton
+        {/* <ArrowButton
           text="Delete Account"
           onPress={() => navigation.navigate("OnBoarding")}
-        />
+        /> */}
       </View>
     );
   }

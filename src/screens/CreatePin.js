@@ -62,7 +62,7 @@ const CreatePin = ({ route }) => {
               setPin={setPin}
               length={4}
               onComplete={handlePinComplete}
-              justifyContent="flex-start"
+              justifyContent="center"
             />
           </View>
         </View>
@@ -74,7 +74,7 @@ const CreatePin = ({ route }) => {
               setPin={setCheck}
               length={4}
               onComplete={handleCheckComplete}
-              justifyContent="flex-start"
+              justifyContent="center"
               disable={disable}
               error={error}
             />
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     fontWeight: "500",
     marginTop: 15,
-    textAlign: "left",
+    textAlign: "center",
     marginBottom: 8,
   },
   buttonContainer: {

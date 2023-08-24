@@ -93,11 +93,11 @@ const CustomDrawer = (props) => {
           />
         </View>
       </DrawerContentScrollView>
-      <ArrowButton
+      {/* <ArrowButton
         text="Logout"
         onPress={() => navigation.navigate("Logout")}
         icon={<LogoutTab />}
-      />
+      /> */}
     </View>
   );
 };

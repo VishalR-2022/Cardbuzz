@@ -36,10 +36,10 @@ const OnBoarding = () => {
 
   function renderTop() {
     return (
-      <View style={styles.topContainer}>
+      <View>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.Primary} />
         <Image
-          style={{ width: "100%", position: "relative", top: -90 }}
+          style={{ width: "100%", marginTop: -90 }}
           source={require("../assets/images/onboarding.png")}
         />
       </View>
@@ -118,7 +118,7 @@ const OnBoarding = () => {
 
   function renderFooter() {
     return (
-      <View style={{ marginTop: 40, position: "absolute", bottom: -80 }}>
+      <View style={{ marginTop: 40, marginBottom: 20 }}>
         <Text style={styles.footerPara}>
           By creating an account, you're agreeing to our{"\n"}
           <Text style={{ color: COLORS.TextDark }}>Privacy policy </Text>and
@@ -130,30 +130,22 @@ const OnBoarding = () => {
 
   return (
     <SafeAreaView style={{ ...styles.container }}>
-      <KeyboardAwareScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-          paddingBottom: 0,
-        }}
-        showsVerticalScrollIndicator={false}
-      >
-        {renderTop()}
-        <View
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: 20,
-            position: "relative",
-            top: -90,
-          }}
-        >
-          {renderTitle()}
-          {renderTextInput()}
-          {renderButton()}
-          {renderFooter()}
+        <View style={{position:'absolute', bottom: 0}}>
+          {renderTop()}
+          <View
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 20,
+            }}
+          >
+            {renderTitle()}
+            {renderTextInput()}
+            {renderButton()}
+            {renderFooter()}
+          </View>
         </View>
-      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
