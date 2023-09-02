@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PinCodeInput from "react-native-smooth-pincode-input";
-import { View } from "react-native"; // Import View from react-native
+import { View, Text } from "react-native"; // Import View from react-native
 import { COLORS } from "../constants/theme";
 
 const PinInput = ({
@@ -25,25 +25,32 @@ const PinInput = ({
 
   return (
     <View style={{ flexDirection: "row", justifyContent: justifyContent }}>
-      <PinCodeInput
-        editable={disable}
-        cellSpacing={8}
-        password
-        mask="﹡"
-        codeLength={length}
-        value={pin}
-        onTextChange={handleChangePin}
-        keyboardType="number-pad"
-        textStyle={{ fontSize: 16 }}
-        cellStyle={{
-          width: 45,
-          height: 56,
-          borderRadius: 8,
-          borderWidth: 1,
-          borderColor: error ? COLORS.Error : "#dddd",
-          padding: 8,
-        }}
-      />
+      <View>
+        <PinCodeInput
+          editable={disable}
+          cellSpacing={8}
+          password
+          mask="﹡"
+          codeLength={length}
+          value={pin}
+          onTextChange={handleChangePin}
+          keyboardType="number-pad"
+          textStyle={{ fontSize: 16 }}
+          cellStyle={{
+            width: 45,
+            height: 56,
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: error ? COLORS.Error : "#dddd",
+            padding: 8,
+          }}
+        />
+        {typeof error === "string" && error !== "" && (
+          <Text style={{ color: "red", fontSize: 12, marginTop: 8 }}>
+            {error}
+          </Text>
+        )}
+      </View>
     </View>
   );
 };

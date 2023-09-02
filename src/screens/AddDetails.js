@@ -89,7 +89,10 @@ const AddDetails = () => {
             {errors.address && (
               <Text style={styles.errorText}>{errors.address.message}</Text>
             )}
+            <View style={{marginTop:12}}>
+
             <Divider />
+            </View>
             <Controller
               control={control}
               name="bankName"

@@ -16,7 +16,6 @@ const PinLogin = () => {
   const navigation = useNavigation();
   const password = useSelector((state) => state.auth.pin);
   const [pin, setPin] = useState("");
-  const [disable, setDisable] = useState(false);
   const [error, setError] = useState(false);
 
   const handlePinComplete = (code) => {
@@ -28,7 +27,6 @@ const PinLogin = () => {
       if (pin === password) {
         navigation.navigate("AddDetails");
         setPin("");
-        setDisable(false);
         setError(null);
       } else {
         setError(true);

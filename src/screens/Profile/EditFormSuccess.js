@@ -6,8 +6,8 @@ const EditFormSuccess = () => {
 
   return (
     <Success
-      text={"Changes\nSaved"}
-      onPress={() => navigation.navigate("Profile")}
+      text={"Bank Details Updated"}
+      onPress={() => navigation.navigate("Root")}
     />
   );
 };

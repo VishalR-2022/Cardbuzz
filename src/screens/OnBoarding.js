@@ -7,13 +7,15 @@ import {
   StatusBar,
   Image,
 } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import PhoneInput from "react-native-phone-number-input";
 import { useNavigation } from "@react-navigation/native";
-import { AndroidSafeArea, COLORS } from "../constants/theme";
+import { COLORS } from "../constants/theme";
 import { Button } from "../components";
 import { useDispatch } from "react-redux";
 import { login } from "../store/slice/authSlice";
+import { saveToken } from "../helper/keychain";
+import AuthService from "../service/AuthService";
+import { DEVICE_ID } from "../constants/DeviceInfo";
 
 const OnBoarding = () => {
   const navigation = useNavigation();
@@ -27,7 +29,30 @@ const OnBoarding = () => {
     setValid(phoneInput.current?.isValidNumber(value));
   }, [value]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    // try {
+    //   const registrationData = {
+    //     country_code: "+91",
+    //     contact_number: formattedValue,
+    //     device_id: DEVICE_ID, // Replace with the actual device ID
+    //     notification_token: "Notification1234abcd", // Replace with the actual notification token
+    //     phone_model: "Galaxy S21", // Replace with the actual phone model
+    //     os: "Android",
+    //     os_version: "2.0.5", // Replace with the actual OS version
+    //   };
+
+    //   const response = await AuthService.register(registrationData);
+
+    //   const token = response.data.token;
+    //   await saveToken(token); // Save the token to keychain
+
+    //   setValue("");
+    //   setFormattedValue("");
+    //   navigation.navigate("VerificationOtpSignUp");
+    // } catch (error) {
+    //   console.error("Registration failed:", error);
+    //   // Handle error here
+    // }
     dispatch(login({ mobileNumber: formattedValue }));
     setValue("");
     setFormattedValue("");
@@ -130,22 +155,22 @@ const OnBoarding = () => {
 
   return (
     <SafeAreaView style={{ ...styles.container }}>
-        <View style={{position:'absolute', bottom: 0}}>
-          {renderTop()}
-          <View
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: 20,
-            }}
-          >
-            {renderTitle()}
-            {renderTextInput()}
-            {renderButton()}
-            {renderFooter()}
-          </View>
+      <View style={{ position: "absolute", bottom: 0 }}>
+        {renderTop()}
+        <View
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 20,
+          }}
+        >
+          {renderTitle()}
+          {renderTextInput()}
+          {renderButton()}
+          {renderFooter()}
         </View>
+      </View>
     </SafeAreaView>
   );
 };

@@ -52,8 +52,9 @@ import DthRechargePayment from "./Home/DthRechargePaymet";
 import FastTagRechargePayment from "./Home/FastTagRechargePayment";
 import ElectricityOperatorType from "./Home/ElectricityOperatorType";
 import AddUpiId from "./AddUpiId";
-import PopUpSuccessWalletMoney from './Popup/PopUpSuccessWalletMoney';
-import PopUpWarningWalletMoney from './Popup/PopUpWarningWalletMoney';
+import PopUpSuccessWalletMoney from "./Popup/PopUpSuccessWalletMoney";
+import PopUpWarningWalletMoney from "./Popup/PopUpWarningWalletMoney";
+import EditFormOtpVerification from "./EditFormOtp";
 
 export {
   Home,
@@ -111,5 +112,6 @@ export {
   ElectricityOperatorType,
   AddUpiId,
   PopUpSuccessWalletMoney,
-  PopUpWarningWalletMoney
+  PopUpWarningWalletMoney,
+  EditFormOtpVerification,
 };

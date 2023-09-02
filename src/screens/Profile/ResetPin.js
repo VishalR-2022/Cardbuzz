@@ -23,31 +23,53 @@ import { savePin } from "../../store/slice/authSlice";
 const ResetPin = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  // const [pin, setPin] = useState("");
+  const requiredText = "This field is required*";
+  const [pin, setPin] = useState({
+    oldPin: "",
+    newPin: "",
+    confirmPin: "",
+  });
   // const [check, setCheck] = useState("");
   // const [disable, setDisable] = useState(false);
-  // const [error, setError] = useState(false);
+  const [error, setError] = useState({
+    oldPin: null,
+    newPin: null,
+    confirmPin: null,
+  });
   const password = useSelector((state) => state.auth.pin);
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-    getValues,
-  } = useForm();
 
-  // const handlePinComplete = (code) => {
-  //   setPin(code);
-  //   setDisable(true);
-  // };
+  const handlePinComplete = (code) => {
+    setPin((pins) => ({ ...pins, oldPin: code }));
+    setError((errors) => ({ ...errors, oldPin: "" }));
+  };
 
-  // const handleCheckComplete = (code) => {
-  //   setCheck(code);
-  // };
+  const handleCheckComplete = (code) => {
+    setPin((pins) => ({ ...pins, confirmPin: code }));
+    setError((errors) => ({ ...errors, confirmPin: "" }));
+  };
 
-  const onSubmit = (data) => {
-    if (data.oldPin === password && data.newPin === data.reenterNewPin) {
-      dispatch(savePin({ pin: data.newPin }));
-      navigation.navigate("ResetPinSuccess");
+  const handleNewPinComplete = (code) => {
+    setPin((pins) => ({ ...pins, newPin: code }));
+    setError((errors) => ({ ...errors, newPin: "" }));
+  };
+  const onSubmit = () => {
+    if (pin.oldPin === "")
+      setError((errors) => ({ ...errors, oldPin: requiredText }));
+    if (pin.newPin === "")
+      setError((errors) => ({ ...errors, newPin: requiredText }));
+    if (pin.confirmPin === "")
+      setError((errors) => ({ ...errors, confirmPin: requiredText }));
+    if (!!pin.oldPin && !!pin.newPin && !!pin.confirmPin) {
+      if (pin.oldPin !== password) {
+        setError((errors) => ({ ...errors, oldPin: "Old Pins do not match" }));
+      } else {
+        if (pin.confirmPin !== pin.newPin) {
+          setError((errors) => ({ ...errors, confirmPin: "Incorrect Pin" }));
+        } else {
+          dispatch(savePin({ pin: pin.newPin }));
+          navigation.navigate("ResetPinSuccess");
+        }
+      }
     }
   };
 
@@ -58,126 +80,42 @@ const ResetPin = () => {
   function renderContent() {
     return (
       <View style={{ marginHorizontal: 16, marginVertical: 40 }}>
-        {/* <Text style={styles.contentTitle}>Enter 4 digit PIN</Text>
-        <View style={{ marginBottom: 16 }}>
+        <View style={{ marginBottom: 10 }}>
+          <Text style={styles.contentPara}>Enter Old Pin</Text>
           <View>
             <BoxTextField
-              pin={pin}
-              setPin={setPin}
+              pin={pin.oldPin}
+              setPin={(old) => setPin({ ...pin, oldPin: old })}
               length={4}
               onComplete={handlePinComplete}
-              error={error}
-              cellStyle={{width: 76, height: 56}}
+              error={error.oldPin}
             />
           </View>
-          {error && (
-            <Text style={{ ...styles.contentPara, color: COLORS.Error }}>
-              Old Pin do
-            </Text>
-          )}
+          <TouchableOpacity onPress={() => navigation.navigate("ForgotPin")}>
+            <Text style={styles.resend}>Forgot Pin</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate("ForgotPin")}>
-          <Text style={styles.resend}>Forgot Pin</Text>
-        </TouchableOpacity> */}
-        <Controller
-          control={control}
-          name="oldPin"
-          rules={{
-            required: "Old Pin is required",
-            minLength: {
-              value: 4,
-              message: "PIN must be 4 digits",
-            },
-            maxLength: {
-              value: 4,
-              message: "PIN must be 4 digits",
-            },
-            validate: (value) =>
-              value === "" || value === password
-                ? true
-                : "Old Pins do not match",
-          }}
-          render={({ field }) => (
-            <TextField
-              value={field.value}
-              onChangeText={field.onChange}
-              placeholder="Enter Old Pin"
-              secureTextEntry
-              keyboardType="numeric"
-              maxLength={4}
-              defaultValue={"0000"}
-            />
-          )}
-        />
-        {errors.oldPin && (
-          <Text style={styles.errorText}>{errors.oldPin.message}</Text>
-        )}
-        <TouchableOpacity onPress={() => navigation.navigate("ForgotPin")}>
-          <Text style={styles.resend}>Forgot Pin</Text>
-        </TouchableOpacity>
         <Divider />
-        <Controller
-          control={control}
-          name="newPin"
-          rules={{
-            required: "New Pin is required",
-            minLength: {
-              value: 4,
-              message: "PIN must be 4 digits",
-            },
-            maxLength: {
-              value: 4,
-              message: "PIN must be 4 digits",
-            },
-          }}
-          render={({ field }) => (
-            <TextField
-              value={field.value}
-              onChangeText={field.onChange}
-              placeholder="Enter New Pin"
-              secureTextEntry
-              keyboardType="numeric"
-              maxLength={4}
-              defaultValue={"0000"}
-            />
-          )}
+        <Text style={styles.contentPara}>Enter New Pin</Text>
+        <BoxTextField
+          pin={pin.newPin}
+          setPin={(code) => setPin({ ...pin, newPin: code })}
+          length={4}
+          onComplete={handleNewPinComplete}
+          justifyContent="center"
+          error={error.newPin}
         />
-        {errors.newPin && (
-          <Text style={styles.errorText}>{errors.newPin.message}</Text>
-        )}
-        <Controller
-          control={control}
-          name="reenterNewPin"
-          rules={{
-            required: "Re-Enter New Pin is required",
-            minLength: {
-              value: 4,
-              message: "PIN must be 4 digits",
-            },
-            maxLength: {
-              value: 4,
-              message: "PIN must be 4 digits",
-            },
-            validate: (value) =>
-              value === "" || value === getValues("newPin")
-                ? true
-                : "New Pins do not match",
-          }}
-          render={({ field }) => (
-            <TextField
-              value={field.value}
-              onChangeText={field.onChange}
-              placeholder="Re-Enter New Pin"
-              secureTextEntry
-              keyboardType="numeric"
-              maxLength={4}
-              defaultValue={"0000"}
-            />
-          )}
-        />
-        {errors.reenterNewPin && (
-          <Text style={styles.errorText}>{errors.reenterNewPin.message}</Text>
-        )}
+        <View style={{ marginTop: 20 }}>
+          <Text style={styles.contentPara}>Re-enter New PIN</Text>
+          <BoxTextField
+            pin={pin.confirmPin}
+            setPin={(code) => setPin({ ...pin, confirmPin: code })}
+            length={4}
+            onComplete={handleCheckComplete}
+            justifyContent="center"
+            error={error.confirmPin}
+          />
+        </View>
       </View>
     );
   }
@@ -197,7 +135,7 @@ const ResetPin = () => {
         {renderContent()}
       </KeyboardAwareScrollView>
       <View style={styles.buttonContainer}>
-        <Button text="Update" onPress={handleSubmit(onSubmit)} width={"100%"} />
+        <Button text="Update" onPress={onSubmit} width={"100%"} />
       </View>
     </SafeAreaView>
   );
@@ -220,7 +158,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     alignItems: "center",
-    marginTop: 50,
     paddingBottom: 20,
     justifyContent: "flex-end",
     marginHorizontal: 16,
@@ -232,10 +169,20 @@ const styles = StyleSheet.create({
   },
   resend: {
     fontSize: 14,
+    marginTop: 10,
     color: COLORS.Primary,
     fontWeight: "700",
-    textAlign: "right",
+    textAlign: "center",
     textDecorationLine: "underline",
+  },
+  contentPara: {
+    fontSize: 12,
+    color: COLORS.TextGray,
+    marginHorizontal: 8,
+    fontWeight: "500",
+    marginTop: 15,
+    textAlign: "center",
+    marginBottom: 8,
   },
 });
 

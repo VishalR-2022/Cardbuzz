@@ -38,7 +38,7 @@ import {
   AboutUs,
   TermAndConditions,
   PrivacyPolicy,
-  BuzzWallet,
+  EditFormOtpVerification,
   MobileRecharge,
   VerificationOtpSignUp,
   VerificationRegister,
@@ -146,7 +146,10 @@ const AppNavigator = () => {
       <Stack.Screen name="ResetPin" component={ResetPin} />
       <Stack.Screen name="ForgotPin" component={ForgotPin} />
       <Stack.Screen name="ForgotPinOTP" component={ForgotPinOtp} />
-
+      <Stack.Screen
+        name="EditFormOtpVerification"
+        component={EditFormOtpVerification}
+      />
       <Stack.Screen name="AccountSetting" component={AccountSetting} />
       <Stack.Screen name="Logout" component={Logout} />
       <Stack.Screen name="ContactUs" component={ContactUs} />

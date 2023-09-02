@@ -24,7 +24,7 @@ const EditProfile = () => {
   const onSubmit = (data) => {
     if (data.accountNumber === data.accountNumberCheck) {
       dispatch(setUserDetails(data));
-      navigation.navigate("EditFormSuccess", { selectedTab: "Profile" });
+      navigation.navigate("EditFormOtpVerification");
     }
   };
 
@@ -43,7 +43,7 @@ const EditProfile = () => {
   }, []);
 
   function renderTop() {
-    return <BackButton text="Edit Profile" />;
+    return <BackButton text="My Profile" />;
   }
 
   function renderContent() {
@@ -82,23 +82,36 @@ const EditProfile = () => {
         {errors.pinCode && (
           <Text style={styles.errorText}>{errors.pinCode.message}</Text>
         )}
-        <Controller
-          control={control}
-          name="address"
-          defaultValue=""
-          rules={{ required: "Address is required" }}
-          render={({ field }) => (
-            <TextField
-              value={field.value}
-              onChangeText={field.onChange}
-              placeholder="Address"
-            />
+        <View style={{ marginBottom: 16 }}>
+          <Controller
+            control={control}
+            name="address"
+            defaultValue=""
+            rules={{ required: "Address is required" }}
+            render={({ field }) => (
+              <TextField
+                value={field.value}
+                onChangeText={field.onChange}
+                placeholder="Address"
+              />
+            )}
+          />
+          {errors.address && (
+            <Text style={styles.errorText}>{errors.address.message}</Text>
           )}
-        />
-        {errors.address && (
-          <Text style={styles.errorText}>{errors.address.message}</Text>
-        )}
-        <Divider />
+        </View>
+        <Divider color="#DDDDDD" />
+        <Text
+          style={{
+            marginTop: 18,
+            marginBottom: 4,
+            fontWeight: "700",
+            fontSize: 16,
+            lineHeight: 24,
+          }}
+        >
+          Bank Details
+        </Text>
         <Controller
           control={control}
           name="bankName"
@@ -191,7 +204,11 @@ const EditProfile = () => {
         {renderTop()}
         {renderContent()}
         <View style={styles.buttonContainer}>
-          <Button text="Save" onPress={handleSubmit(onSubmit)} width={"100%"} />
+          <Button
+            text="Update Bank Details"
+            onPress={handleSubmit(onSubmit)}
+            width={"100%"}
+          />
         </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>
@@ -215,7 +232,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     alignItems: "center",
-    marginTop: 50,
     paddingBottom: 20,
     justifyContent: "flex-end",
     marginHorizontal: 16,
