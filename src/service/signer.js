@@ -64,8 +64,8 @@ const sign = (
   signed_headers,
   api_endpoint
 ) => {
-  console.log(body)
-  secretKey = Buffer.from(key, 'base64');
+  console.log(url, method, params, body, headers, key, signed_headers, api_endpoint)
+  secretKey = key;
   if (!url.startsWith("http://") || !url.startsWith("https://")) {
     url = api_endpoint + url;
   }
@@ -73,26 +73,24 @@ const sign = (
   const req_method = method.toUpperCase();
 
   const req_uri = canonicalize_uri(url);
-  // console.log(req_uri, '>>>>>>>>>>>>>>>>>>>>>>>> uri')
+  console.log(req_uri, '>>>>>>>>>>>>>>>>>>>>>>>> uri')
   const qs = canonicalize_query_string(params);
   const hs = canonicalize_headers(headers, signed_headers);
   const body_hash = req_payload_hash(body);
 
   const canonicalizedRequest = [req_method, req_uri, qs, hs, body_hash].join(
     "\n"
-    );
-    
-    const canonicalizedRequest_hash = crypto
+  );
+
+  const canonicalizedRequest_hash = crypto
     .createHash("sha256")
     .update(canonicalizedRequest)
     .digest("hex");
-    
-    // console.log(canonicalizedRequest_hash, 'body_hashhhhhhhhhh');
+
   const timestamp = headers["x-date"];
   const data = ["HMAC-SHA256", timestamp, canonicalizedRequest_hash].join("\n");
 
   const signature = _sign(timestamp, data, secretKey);
-  // console.log(_sign(timestamp, data, secretKey), data, secretKey, 'kkkkjkjjkjkjkjk')
   return signature;
 };
 

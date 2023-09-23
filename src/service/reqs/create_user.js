@@ -16,8 +16,6 @@ async function createUser({ country_code, phone }) {
   };
   const data = encPayload(user);
   
-  console.log(data, 'datta >>>>>>>>>>>>>>>>>>>>>>>>>>');
-
   let key = encKey(data.key);
   const payload = {
     body: data.cipherText,
@@ -39,7 +37,7 @@ async function createUser({ country_code, phone }) {
     let res = await httpClient(config);
     console.log(res.data);
   } catch (e) {
-    // console.log(e.response, '>>>>>>>>>>>>>>>>>>>>>');
+    console.log(e.response.data);
     e = !e; // HANDLE error
   }
 }

@@ -30,8 +30,8 @@ httpClient.interceptors.request.use((config) => {
       config.baseURL
     );
     config.headers["x-hmac-tag"] = x_hmac_tag;
+    console.log(x_hmac_tag, 'x_hmac_tag')
   }
-  console.log(config, 'iiiiiiiiiiiiiiiiiiiiiiiiiiii');
   return config;
 });
 
@@ -75,9 +75,8 @@ httpClient.interceptors.response.use(
   },
   async (error) => {
     console.log(">>>>>>>>>>>>>>>>>>>>=", error);
-    const err = error.response?.data?.detail?.err;
+    const err = error.response?.data;
     // err={err:{code,msg}}
-    console.log(err);
     if (err?.code == 20010) {
       // make a call to refresh token
       // await getRefreshToken(JWT_TOKENS.refresh);

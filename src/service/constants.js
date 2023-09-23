@@ -15,8 +15,7 @@ jI6DQsaJCXH2bDXHadz7gB8YDgZedvg3yHLilpYI/tgS+v42n4FVpvWK5pJ0IhxD
 MLeC0qtbtjS0tsXgiukU3UIJswVmSLGIGyLjJIy/sGVQrI0+/iDgeEFn7c3tI7xp
 Y3ZWKWkvNncQiDniZhLjEO67+zFHufPey/fo5UnL4d6nXpxnU7NBBx+RJOi0DNid
 ZwIDAQAB
------END PUBLIC KEY-----
-`
+-----END PUBLIC KEY-----`
 
 module.exports = {
   SIGNED_HEADERS: SIGNED_HEADERS,

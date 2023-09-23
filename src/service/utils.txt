@@ -1,4 +1,5 @@
-import crypto from "crypto"import RNFS from 'react-native-fs';
+const crypto = require("../../crypto");
+import RNFS from 'react-native-fs';
 import CryptoJs from 'react-native-crypto-js';
 import { Buffer } from "buffer";
 import { PUBLIC_KEY } from './constants';

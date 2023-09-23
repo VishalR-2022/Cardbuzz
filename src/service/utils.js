@@ -1,4 +1,5 @@
- import RNFS from 'react-native-fs';
+const crypto = require("../../crypto");
+import RNFS from 'react-native-fs';
 import CryptoJs from 'react-native-crypto-js';
 import { Buffer } from "buffer";
 import { PUBLIC_KEY } from './constants';
@@ -33,11 +34,10 @@ async function verifySign(x_hmac_tag, response_body, in_signature) {
 function encKey(data) {
   // const publicKey = Buffer.from(PUBLIC_KEY);
 
-  const punlicKey = Buffer.from(PUBLIC_KEY).toString('base64');
-  console.log(punlicKey, ';pasda')
-  const encryptedData =  CryptoJs.AES.encrypt(data, punlicKey).toString();
+  // const publicKeyWordArray = CryptoJs.enc.Hex.parse(PUBLIC_KEY);
+  const encryptedData =  CryptoJs.AES.encrypt(data, PUBLIC_KEY).toString();
   console.log(encryptedData, '&&&&&&&&&&&&&&&&&&&&&hahshahdadhagds')
-  return encryptedData.toString();
+  return encryptedData;
 }
 
 // ----------------------------------------------

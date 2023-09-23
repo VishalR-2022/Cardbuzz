@@ -21,6 +21,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.4.0",
     "buffer": "^6.0.3",
+    "crypto": "^1.0.1",
     "date-fns-tz": "^2.0.0",
     "expo": "~49.0.5",
     "expo-file-system": "^15.4.3",
@@ -61,8 +62,7 @@
     "rn-fetch-blob": "^0.12.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0",
-    "rn-nodeify": "github:tradle/rn-nodeify"
+    "@babel/core": "^7.20.0"
   },
   "private": true
 }
