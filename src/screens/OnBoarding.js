@@ -14,8 +14,9 @@ import { Button } from "../components";
 import { useDispatch } from "react-redux";
 import { login } from "../store/slice/authSlice";
 import { saveToken } from "../helper/keychain";
-import AuthService from "../service/AuthService";
+// import AuthService from "../service/AuthService";
 import { DEVICE_ID } from "../constants/DeviceInfo";
+import { createUser } from "../service/reqs/create_user";
 
 const OnBoarding = () => {
   const navigation = useNavigation();
@@ -53,10 +54,17 @@ const OnBoarding = () => {
     //   console.error("Registration failed:", error);
     //   // Handle error here
     // }
-    dispatch(login({ mobileNumber: formattedValue }));
+    const usr_data = {
+      country_code: "91",
+      phone: "1234567890",
+    };
+    //
+    
+    createUser(usr_data);
+    // dispatch(login({ mobileNumber: formattedValue }));
     setValue("");
     setFormattedValue("");
-    navigation.navigate("VerificationOtpSignUp");
+    // navigation.navigate("VerificationOtpSignUp");
   };
 
   function renderTop() {
