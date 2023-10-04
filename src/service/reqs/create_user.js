@@ -22,7 +22,7 @@ async function createUser({ country_code, phone }) {
     token: key,
   };
 
-  console.log(data.key, '1234567889')
+  console.log(data, '1234567889')
   // send to sever
   const config = {
     method: "post",

@@ -1,10 +1,11 @@
+import {NativeModules } from 'react-native';
 const crypto = require("../../crypto");
 import RNFS from 'react-native-fs';
 import CryptoJs from 'react-native-crypto-js';
 import { Buffer } from "buffer";
 import { PUBLIC_KEY } from './constants';
 import { JSHash, JSHmac, CONSTANTS } from "react-native-hash";
-
+const cryptoModule = NativeModules.MyCryptoModule;
 // ----------------------------------------------
 async function verifySign(x_hmac_tag, response_body, in_signature) {
   console.log('123456789');
@@ -36,32 +37,52 @@ function encKey(data) {
 
   // const publicKeyWordArray = CryptoJs.enc.Hex.parse(PUBLIC_KEY);
   const encryptedData =  CryptoJs.AES.encrypt(data, PUBLIC_KEY).toString();
-  console.log(encryptedData, '&&&&&&&&&&&&&&&&&&&&&hahshahdadhagds')
+  // console.log(encryptedData, '&&&&&&&&&&&&&&&&&&&&&hahshahdadhagds')
   return encryptedData;
 }
 
 // ----------------------------------------------
-function genRandomKey_b64(size = 32) {
-  const key = CryptoJs.lib.WordArray.random(size);
-  const base64Key = CryptoJs.enc.Base64.stringify(key);
+async function genRandomKey_b64(size = 32) {
+  // const key = CryptoJs.lib.WordArray.random(size);
+  // const base64Key = CryptoJs.enc.Base64.stringify(key);
+  const base64Key = await cryptoModule.genRandomKey_b64(size);
+  console.log({base64Key})
   return base64Key;
 }
 
 // ----------------------------------------------
-function encPayload(data, secretKey) {
-  data = JSON.stringify(data);
-
-  if (typeof secretKey === "undefined") {
-    secretKey = genRandomKey_b64(32);
+async function encPayload(data, secretKey) {
+  try{
+    const finaldata = await cryptoModule.encrypt(data, secretKey);
+    console.log({finaldata});
+  } catch(error) {
+    console.error(error)
   }
 
-  let cipher = CryptoJs.AES.encrypt(data, secretKey).toString();
-  console.log(cipher.toString(CryptoJs.enc.Base64), '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> cipher')
+  // data = JSON.stringify(data);
 
-  return {
-    cipherText: cipher.toString(CryptoJs.enc.Base64),
-    key: secretKey,
-  };
+  // if (typeof secretKey === "undefined") {
+  //   secretKey = await genRandomKey_b64(32);
+  // }
+  // const key = Buffer.from(secretKey, "base64");
+
+  // const iv = await genRandomKey_b64(12);
+
+  // let cipher = crypto.createCipheriv("chacha20-poly1305", key, iv, {
+  //   authTagLength: 16,
+  // });
+  // // const cipherText = cipher.update(data);
+  // const cipherText = Buffer.concat([
+  //   cipher.update(Buffer.from(data), "utf8"),
+  //   cipher.final(),
+  // ]);
+
+  // const authTag = cipher.getAuthTag();
+
+  // return {
+  //   cipherText: Buffer.concat([iv, cipherText, authTag]).toString("base64"),
+  //   key: key.toString("base64"),
+  // };
 }
 
 // function encPayload(data, secretKey) {
