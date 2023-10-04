@@ -6,6 +6,8 @@ import {
   SafeAreaView,
   StatusBar,
   Image,
+  Alert,
+  NativeModules
 } from "react-native";
 import PhoneInput from "react-native-phone-number-input";
 import { useNavigation } from "@react-navigation/native";
@@ -25,12 +27,16 @@ const OnBoarding = () => {
   const [valid, setValid] = useState(null);
   const phoneInput = useRef(null);
   const dispatch = useDispatch();
+  const nativeModule = NativeModules.MyNativeModule;
 
   useEffect(() => {
     setValid(phoneInput.current?.isValidNumber(value));
   }, [value]);
 
   const handleSubmit = async () => {
+    // const result = await nativeModule?.addTwoNumbers("5","1");
+    // Alert.alert(result);
+
     // try {
     //   const registrationData = {
     //     country_code: "+91",
@@ -54,13 +60,13 @@ const OnBoarding = () => {
     //   console.error("Registration failed:", error);
     //   // Handle error here
     // }
-    const usr_data = {
+    const user_data = {
       country_code: "91",
       phone: "1234567890",
     };
     //
     
-    createUser(usr_data);
+    createUser(user_data);
     // dispatch(login({ mobileNumber: formattedValue }));
     setValue("");
     setFormattedValue("");

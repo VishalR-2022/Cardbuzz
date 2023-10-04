@@ -1,10 +1,11 @@
 import { httpClient } from "../httpClient";
 import { encPayload, encKey } from "../utils";
 import { DEVICE_ID } from "../constants";
-import CryptoJs from 'react-native-crypto-js';
+import { NativeModules } from 'react-native';
 
 // ----------------------------------------------
 // ----------------------------------------------
+const nativeModule = NativeModules.MyNativeModule;
 
 async function createUser({ country_code, phone }) {
   let user = {
@@ -14,8 +15,8 @@ async function createUser({ country_code, phone }) {
     notification_token: "xxxx-yyyyy",
     created_at: new Date().toISOString(),
   };
-  const data = encPayload(user);
-  
+  const data = nativeModule.encPayload(user);
+ console.log(data, 'dataaaaaaaaaaaaaaaaaaaaaaaaaaaa') 
   let key = encKey(data.key);
   const payload = {
     body: data.cipherText,
