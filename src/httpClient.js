@@ -5,9 +5,10 @@ const {
   API_ENDPOINT,
   JWT_TOKENS,
 } = require("./constant");
+const { sign } = require("./signer");
+const { verifySign } = require("./utils");
 import uuid from 'react-native-uuid';
-import { sign } from "./signer";
-import { verifySign } from "./utils";
+const crypto = require("../crypto-custom");
 
 const httpClient = axios.create({
   baseURL: `${API_ENDPOINT}`,

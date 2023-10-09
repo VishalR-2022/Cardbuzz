@@ -1,9 +1,10 @@
+const {DEVICE_ID, PUBLIC_KEY} = require('./constant');
+const crypto = require('../crypto-custom');
 // import crypto from '../crypto-custom';
 // import crypto from '../c11rypto';
 import {Buffer} from 'buffer';
 import XCrypto from './XCryptoModule';
 import { httpClient } from './httpClient';
-import { DEVICE_ID } from './constant';
 
 const SecurePK = {
   priv_key_b64: '',
@@ -75,11 +76,9 @@ async function encKey(data) {
 
 async function encPayload(data) {
   const payload = JSON.stringify(data);
-  console.log(payload, 'payload')
   let ret = null;
   try {
     ret = await XCrypto.encryptChaCha(payload);
-    console.log(ret, 'retttt')
   } catch (e) {
     console.log(e);
   }
@@ -102,16 +101,16 @@ async function testHarness() {
   // load server pub key
   // this is on app load. one time call. chk where best to call and how
   /////////////////////////////////////////////////
-  // await XCrypto.loadRSAKey(PUBLIC_KEY);
+  await XCrypto.loadRSAKey(PUBLIC_KEY);
   /////////////////////////////////////////////////
 
 //  console.log(await genX25519KeyPair());
 
-  // console.log(await genRandomKey_b64());
+  console.log(await genRandomKey_b64());
 
-  // const pub_key_peer =
-  //   'LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUNvd0JRWURLMlZ1QXlFQVhCeFY3cWxxMXlGc3RIOThvakp4c0xBTUNiQytncVlNL1BGS0l5MUJ0VXc9Ci0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQo=';
-  // console.log(await genSharedSecret(pub_key_peer));
+  const pub_key_peer =
+    'LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUNvd0JRWURLMlZ1QXlFQVhCeFY3cWxxMXlGc3RIOThvakp4c0xBTUNiQytncVlNL1BGS0l5MUJ0VXc9Ci0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQo=';
+  console.log(await genSharedSecret(pub_key_peer));
 
   // sample req data
   const data = {
