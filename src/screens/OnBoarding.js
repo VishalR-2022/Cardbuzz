@@ -13,9 +13,7 @@ import { COLORS } from "../constants/theme";
 import { Button } from "../components";
 import { useDispatch } from "react-redux";
 import { login } from "../store/slice/authSlice";
-import { saveToken } from "../helper/keychain";
-import AuthService from "../service/AuthService";
-import { DEVICE_ID } from "../constants/DeviceInfo";
+import { testHarness } from "../utils";
 
 const OnBoarding = () => {
   const navigation = useNavigation();
@@ -53,10 +51,11 @@ const OnBoarding = () => {
     //   console.error("Registration failed:", error);
     //   // Handle error here
     // }
-    dispatch(login({ mobileNumber: formattedValue }));
-    setValue("");
-    setFormattedValue("");
-    navigation.navigate("VerificationOtpSignUp");
+    await testHarness()
+    // dispatch(login({ mobileNumber: formattedValue }));
+    // setValue("");
+    // setFormattedValue("");
+    // navigation.navigate("VerificationOtpSignUp");
   };
 
   function renderTop() {
