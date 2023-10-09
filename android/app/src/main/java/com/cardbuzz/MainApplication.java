@@ -18,6 +18,8 @@ import expo.modules.ReactNativeHostWrapper;
 
 import java.util.List;
 import com.cardbuzz.MyCryptoPackage;
+import com.cardbuzz.XCryptoPackage;
+
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -34,6 +36,8 @@ public class MainApplication extends Application implements ReactApplication {
         List<ReactPackage> packages = new PackageList(this).getPackages();
         // Packages that cannot be autolinked yet can be added manually here, for example:
         packages.add(new MyCryptoPackage());
+        packages.add(new XCryptoPackage());
+
         return packages;
       }
 

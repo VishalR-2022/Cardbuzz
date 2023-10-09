@@ -66,6 +66,7 @@
   },
   "private": true,
   "nativeModules": {
-    "MyCryptoModule": "MyCryptoModule"
+    "MyCryptoModule": "MyCryptoModule",
+    "XCryptoModule": "XCryptoModule"
   }
 }

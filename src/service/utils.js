@@ -1,11 +1,15 @@
 import {NativeModules } from 'react-native';
 const crypto = require("../../crypto");
-import RNFS from 'react-native-fs';
-import CryptoJs from 'react-native-crypto-js';
+// import RNFS from 'react-native-fs';
+// import CryptoJs from 'react-native-crypto-js';
 import { Buffer } from "buffer";
 import { PUBLIC_KEY } from './constants';
-import { JSHash, JSHmac, CONSTANTS } from "react-native-hash";
+// import { JSHash, JSHmac, CONSTANTS } from "react-native-hash";
 const cryptoModule = NativeModules.MyCryptoModule;
+const xCryptoModule = NativeModules.XCryptoModule;
+
+console.log({cryptoModule})
+console.log({xCryptoModule})
 // ----------------------------------------------
 async function verifySign(x_hmac_tag, response_body, in_signature) {
   console.log('123456789');

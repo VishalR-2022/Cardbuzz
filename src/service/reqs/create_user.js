@@ -1,7 +1,7 @@
 import { httpClient } from "../httpClient";
 import { encPayload, encKey } from "../utils";
 import { DEVICE_ID } from "../constants";
-import CryptoJs from 'react-native-crypto-js';
+// import CryptoJs from 'react-native-crypto-js';
 
 // ----------------------------------------------
 // ----------------------------------------------
