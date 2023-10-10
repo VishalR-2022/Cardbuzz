@@ -34,7 +34,6 @@ async function createUser({ country_code, phone }) {
 
   try {
     let res = await httpClient(config);
-    console.log(await getSharedKeyDecoded());
     return res.data;
   } catch (e) {
     console.log(e);

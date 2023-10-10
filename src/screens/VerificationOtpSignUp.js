@@ -11,8 +11,9 @@ import { BoxTextField, Button } from "../components";
 import { AndroidSafeArea, COLORS } from "../constants/theme";
 import { useNavigation } from "@react-navigation/native";
 import BackButton from "../components/BackButton";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { resendOTP, verifySignupOTP } from "../service/request/create_user";
+import { setAccessToken } from "../store/slice/authSlice";
 
 const VerificationOtpSignUp = () => {
   const OTP = "117123"; // Replace with actual OTP
@@ -21,28 +22,25 @@ const VerificationOtpSignUp = () => {
   const accessToken = useSelector(state => state.auth.accessToken)
   const [login, setLogin] = useState(false);
   const [pin, setPin] = useState("");
+  const dispatch = useDispatch();
 
   const handleOTPComplete = async (otp) => {
     const userData = {
       country_code: "91",
       phone: phoneNumber,
     };
-    const response = await verifySignupOTP(userData, accessToken, OTP )
-    console.log("Entered OTP:", response );
-    // if (otp === OTP) {
-    //   console.log("OTP is valid!");
-    //   setLogin(true);
-    //   // Implement OTP validation logic here
-    // } else {
-    //   console.log("Invalid OTP!");
-    //   // Handle invalid OTP
-    // }
+    const response = await verifySignupOTP(userData, accessToken, OTP );
+    console.log(response,'+++++++++')
+    if (response?.success === "OK") {
+      dispatch(setAccessToken({ token: response.data.access_token }))
+      setLogin(true);
+    }
   };
 
   const handleLogIn = () => {
     if (login) {
       setLogin(false);
-      navigation.navigate("VerificationRegister");
+      navigation.navigate("CreatePin");
     }
     console.log("Invalid OTP!");
   };

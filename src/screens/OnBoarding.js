@@ -59,9 +59,9 @@ const OnBoarding = () => {
     };
 
     const response = await createUser(user_data);
-
+    
+    console.log(response, '-------------------')
     if (response?.success === "OK") {
-      console.log(response.data.access, '-------------------')
       // await resendOTP(user_data, response.data.access);
       dispatch(login({ mobileNumber: value }));
       dispatch(setAccessToken({ token: response.data.access }))

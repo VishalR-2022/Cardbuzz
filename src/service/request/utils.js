@@ -156,4 +156,4 @@ async function testHarness() {
   // return;
 }
 
-export {encPayload, verifySign, refreshAccessToken, encKey, genSharedSecret, getSharedKeyDecoded};
+export {encPayload, verifySign, refreshAccessToken, encKey, genSharedSecret, getSharedKeyDecoded, genX25519KeyPair};

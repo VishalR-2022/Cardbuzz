@@ -43,7 +43,7 @@ import com.xcrypto.crypto.*;
 
 public class XCryptoModule extends ReactContextBaseJavaModule {
   Context context;
-  private static final String SHARED_PREFENCE_NAME = "my shared_prefs";
+  private static final String SHARED_PREFENCE_NAME = "cb_shared_prefs";
   private static final String ENCRYPTEDKEY_KEY = "encrypted_key1";
 
   public XCryptoModule(ReactApplicationContext context) {
@@ -141,7 +141,6 @@ public class XCryptoModule extends ReactContextBaseJavaModule {
 //        key = new SecretKeySpec(keyBytes, 0, keyBytes.length, "AES");
 //      }
       SharedPreferences pref = this.context.getSharedPreferences(SHARED_PREFENCE_NAME, Context.MODE_PRIVATE);
-
       String enryptedKeyB64 = pref.getString(ENCRYPTEDKEY_KEY, null);
 
       byte[][] ret=ChaCha20Poly1305.encrypt(data,enryptedKeyB64);

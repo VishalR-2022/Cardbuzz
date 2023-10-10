@@ -4,12 +4,15 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { BackButton, BoxTextField, Button } from "../components";
 import { AndroidSafeArea, COLORS } from "../constants/theme";
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
 import { savePin } from "../store/slice/authSlice";
+import { createUserPin } from "../service/request/create_user_pin";
+import { useSelector, useDispatch } from "react-redux";
 
 const CreatePin = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const phoneNumber = useSelector(state => state.auth.mobileNumber)
+  const accessToken = useSelector(state => state.auth.accessToken)
   const [reset, setReset] = useState(false);
   const [pin, setPin] = useState("");
   const [check, setCheck] = useState("");
@@ -31,17 +34,22 @@ const CreatePin = ({ route }) => {
     setCheck(code);
   };
 
-  const handleCreatePin = () => {
+  const handleCreatePin = async () => {
     if (pin !== null) {
       if (pin === check) {
-        dispatch(savePin({ pin: pin }));
-        setPin("");
-        setCheck("");
-        setDisable(false);
-        setError(null);
-        navigation.navigate("PinSuccess", {
-          reset: reset,
-        });
+        const userData = {
+          country_code: "91",
+          phone: phoneNumber,
+        };
+        const response = await createUserPin(userData, accessToken, pin)
+        // dispatch(savePin({ pin: pin }));
+        // setPin("");
+        // setCheck("");
+        // setDisable(false);
+        // setError(null);
+        // navigation.navigate("PinSuccess", {
+        //   reset: reset,
+        // });
       } else {
         setError(true);
       }
