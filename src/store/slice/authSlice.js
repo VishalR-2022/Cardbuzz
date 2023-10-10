@@ -5,6 +5,7 @@ const initialState = {
   mobileNumber: null,
   imageUrl: null,
   pin: null,
+  accessToken: null,
 };
 
 const authSlice = createSlice({
@@ -25,10 +26,13 @@ const authSlice = createSlice({
     savePin: (state, action) => {
       state.pin = action.payload.pin;
     },
+    setAccessToken: (state, action) => {
+      state.accessToken = action.payload.token
+    }
   },
 });
 
-export const { login, logout, saveImageUrl, savePin } = authSlice.actions;
+export const { login, logout, saveImageUrl, savePin, setAccessToken } = authSlice.actions;
 export default authSlice.reducer;
 
 // ----------------keychain--------------------

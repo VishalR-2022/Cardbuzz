@@ -1,4 +1,4 @@
-const crypto = require("../crypto-custom");
+const crypto = require("../../crypto-custom");
 import {Buffer} from 'buffer';
 
 const canonicalize_uri = (uri) => {

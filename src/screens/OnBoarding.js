@@ -12,8 +12,9 @@ import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../constants/theme";
 import { Button } from "../components";
 import { useDispatch } from "react-redux";
-import { login } from "../store/slice/authSlice";
-import { testHarness } from "../utils";
+import { login, setAccessToken } from "../store/slice/authSlice";
+import { createUser, resendOTP } from "../service/request/create_user";
+import { testHarness } from "../service/request/utils";
 
 const OnBoarding = () => {
   const navigation = useNavigation();
@@ -51,11 +52,23 @@ const OnBoarding = () => {
     //   console.error("Registration failed:", error);
     //   // Handle error here
     // }
-    await testHarness()
-    // dispatch(login({ mobileNumber: formattedValue }));
-    // setValue("");
-    // setFormattedValue("");
-    // navigation.navigate("VerificationOtpSignUp");
+// await testHarness()
+    const user_data = {
+      country_code: "91",
+      phone: value,
+    };
+
+    const response = await createUser(user_data);
+
+    if (response?.success === "OK") {
+      console.log(response.data.access, '-------------------')
+      // await resendOTP(user_data, response.data.access);
+      dispatch(login({ mobileNumber: value }));
+      dispatch(setAccessToken({ token: response.data.access }))
+      navigation.navigate("VerificationOtpSignUp");
+      setValue("");
+      setFormattedValue("");
+    }
   };
 
   function renderTop() {

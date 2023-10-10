@@ -36,10 +36,12 @@ import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.security.KeyStore;
 
+
+import static com.xcrypto.crypto.Constants.SHARED_KEY_ALIAS;
+import static com.xcrypto.crypto.Constants.ENCRYPTOR_KEY_ALIAS;
+
 public class ChaCha20Poly1305 {
   private static final int NONCE_LEN = 12; // 96 bits, 12 bytes
-  private static final String ssKeyAlias="sharedkey";
-  private static final String encSSKeyAlias="encsharedkey";
 
   public static final String TAG = "XCryptoModule";
 
@@ -61,13 +63,13 @@ public class ChaCha20Poly1305 {
     // one way is to generate shared key on the fly
     //  KeyStore ks = KeyStore.getInstance("AndroidKeyStore");
     // ks.load(null);
-    // SecretKey key = (SecretKey) ks.getKey(ssKeyAlias, null);
+    // SecretKey key = (SecretKey) ks.getKey(SHARED_KEY_ALIAS, null);
 
     SecretKey key=null;
     byte[] ssRandomKeyBytes=null;
 
     if (b64EncTextWithIV!=null){
-      SecretKey encSSKey = CryptoUtils.getSecretKeyAES(encSSKeyAlias,false);
+      SecretKey encSSKey = CryptoUtils.getSecretKeyAES(ENCRYPTOR_KEY_ALIAS,false);
       byte[] derivedSharedSecret = CryptoUtils.decryptAESGCM(encSSKey,b64EncTextWithIV);
       key = new SecretKeySpec(derivedSharedSecret, "ChaCha20");
     }else{
@@ -78,7 +80,7 @@ public class ChaCha20Poly1305 {
     }
 
     if (key==null){
-      Log.w(TAG, "No key genetaed OR found under alias: " + ssKeyAlias);
+      Log.w(TAG, "No key genetaed OR found under alias: " + ENCRYPTOR_KEY_ALIAS);
       throw new InvalidKeyException("SecretKey must NOT be NULL");
     }
 

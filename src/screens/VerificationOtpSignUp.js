@@ -11,23 +11,32 @@ import { BoxTextField, Button } from "../components";
 import { AndroidSafeArea, COLORS } from "../constants/theme";
 import { useNavigation } from "@react-navigation/native";
 import BackButton from "../components/BackButton";
+import { useSelector } from "react-redux";
+import { resendOTP, verifySignupOTP } from "../service/request/create_user";
 
 const VerificationOtpSignUp = () => {
-  const OTP = "000000"; // Replace with actual OTP
+  const OTP = "117123"; // Replace with actual OTP
   const navigation = useNavigation();
+  const phoneNumber = useSelector(state => state.auth.mobileNumber)
+  const accessToken = useSelector(state => state.auth.accessToken)
   const [login, setLogin] = useState(false);
   const [pin, setPin] = useState("");
 
-  const handleOTPComplete = (otp) => {
-    console.log("Entered OTP:", otp);
-    if (otp === OTP) {
-      console.log("OTP is valid!");
-      setLogin(true);
-      // Implement OTP validation logic here
-    } else {
-      console.log("Invalid OTP!");
-      // Handle invalid OTP
-    }
+  const handleOTPComplete = async (otp) => {
+    const userData = {
+      country_code: "91",
+      phone: phoneNumber,
+    };
+    const response = await verifySignupOTP(userData, accessToken, OTP )
+    console.log("Entered OTP:", response );
+    // if (otp === OTP) {
+    //   console.log("OTP is valid!");
+    //   setLogin(true);
+    //   // Implement OTP validation logic here
+    // } else {
+    //   console.log("Invalid OTP!");
+    //   // Handle invalid OTP
+    // }
   };
 
   const handleLogIn = () => {
@@ -37,6 +46,14 @@ const VerificationOtpSignUp = () => {
     }
     console.log("Invalid OTP!");
   };
+
+  const handleResendOTP = async() => {
+    const userData = {
+      country_code: "91",
+      phone: phoneNumber,
+    };
+    await resendOTP(userData, accessToken)
+  }
 
   function renderTop() {
     return <BackButton text="Verification OTP" />;
@@ -57,7 +74,7 @@ const VerificationOtpSignUp = () => {
         <Text style={styles.contentPara}>
           A code has been sent to your phone
         </Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => handleResendOTP()}>
           <Text style={styles.resend}>Resend in 00:57</Text>
         </TouchableOpacity>
       </View>
@@ -79,7 +96,7 @@ const VerificationOtpSignUp = () => {
         {renderContent()}
       </KeyboardAwareScrollView>
       <View style={styles.buttonContainer}>
-        <Button text="Login" onPress={handleLogIn} width={"100%"} />
+        <Button text="Login" onPress={handleLogIn} width={"100%"} disable={!login} />
       </View>
     </SafeAreaView>
   );

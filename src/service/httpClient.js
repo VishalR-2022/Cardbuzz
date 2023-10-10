@@ -6,9 +6,8 @@ const {
   JWT_TOKENS,
 } = require("./constant");
 const { sign } = require("./signer");
-const { verifySign } = require("./utils");
+const { verifySign } = require("./request/utils");
 import uuid from 'react-native-uuid';
-const crypto = require("../crypto-custom");
 
 const httpClient = axios.create({
   baseURL: `${API_ENDPOINT}`,
@@ -29,15 +28,15 @@ httpClient.interceptors.request.use((config) => {
       SIGNED_HEADERS,
       config.baseURL
     );
+    console.log(x_hmac_tag, 'x_hmac_tag')
     config.headers["x-hmac-tag"] = x_hmac_tag;
   }
-  console.log(config, 'iiiiiiiiiiiiiiiooooooooooooooo')
   return config;
 });
 
 httpClient.interceptors.response.use(
   (resp) => {
-    console.log(">>>>>>>>>>>>>>>>>>>> resp.headers=", resp.headers);
+    console.log('123')
     // For status code with 2xx
     const x_srv_signature = resp.headers["x-srv-signature"];
     const x_hmac_tag = resp.config.headers["x-hmac-tag"];
@@ -74,10 +73,9 @@ httpClient.interceptors.response.use(
     return resp;
   },
   async (error) => {
-    console.log('sjsjsjsj')
     const err = error.response?.data;
     // err={err:{code,msg}}
-    // console.log(err);
+     console.log(err, 'errrr');
     if (err?.code == 20010) {
       // make a call to refresh token
       await getRefreshToken(JWT_TOKENS.refresh);

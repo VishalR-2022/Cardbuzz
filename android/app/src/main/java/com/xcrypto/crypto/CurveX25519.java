@@ -66,16 +66,15 @@ import com.xcrypto.hkdf.HKDF;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import static com.xcrypto.crypto.Constants.*;
+
 //-------------------------------------------------- x25519 key pair gen
 //-------------------------------------------------- dh key + hkdf key exchange
 public class CurveX25519 {
   public static final String TAG = "XCryptoModule";
-  private static final String masterKeyAlias="cbkey";
-  private static final String ssKeyAlias="sharedkey";
-  private static final String encSSKeyAlias="encsharedkey";
 
 
-  public static String getSharedKey(String b64PubKeyPeer) throws Exception {
+  public static String genSharedKey(String b64PubKeyPeer) throws Exception {
 
     ////////////////////////////////////
     if (b64PubKeyPeer==null || b64PubKeyPeer==""){
@@ -99,11 +98,11 @@ public class CurveX25519 {
     KeyStore ks = KeyStore.getInstance("AndroidKeyStore");
     ks.load(null);
 
-//    KeyStore.Entry entry = ks.getEntry(masterKeyAlias, null);
+//    KeyStore.Entry entry = ks.getEntry(MASTER_KEY_ALIAS, null);
 //    PrivateKey privKey = ((PrivateKeyEntry) entry).getPrivateKey();
-    PrivateKey privKey = (PrivateKey)ks.getKey(masterKeyAlias, null);
+    PrivateKey privKey = (PrivateKey)ks.getKey(MASTER_KEY_ALIAS, null);
     if (privKey == null) {
-      Log.w(TAG, "No key found under alias: " + masterKeyAlias);
+      Log.w(TAG, "No key found under alias: " + MASTER_KEY_ALIAS);
       return null;
     }
     if (!(privKey instanceof PrivateKey)) {
@@ -111,7 +110,7 @@ public class CurveX25519 {
       return null;
     }
 
-//    Certificate []certificates = ks.getCertificateChain(masterKeyAlias);
+//    Certificate []certificates = ks.getCertificateChain(MASTER_KEY_ALIAS);
 //    X509Certificate cert = (X509Certificate) certificates[0];
 //    Log.w(TAG, "certificates: "+Base64.getEncoder().encodeToString(cert.getPublicKey().getEncoded()));
 
@@ -136,29 +135,29 @@ public class CurveX25519 {
     byte[] sharedSecret = ka.generateSecret();
 
 
-    // HKDF derivation
+    ////////// HKDF derivation
     HKDF hkdf256 = HKDF.fromHmacSha256();
     byte[] derivedSharedSecret = hkdf256.extractAndExpand((byte[])null, sharedSecret, null, 32);
 
-    // put derivedSharedSecret in KeyStore. ChaCha20 not available as of now
+    ///////// put derivedSharedSecret in KeyStore. ChaCha20 not available as of now
     // SecretKeySpec signingKey = new SecretKeySpec(derivedSharedSecret, "HmacSHA256");
     SecretKeySpec signingKey = new SecretKeySpec(derivedSharedSecret, 0, derivedSharedSecret.length, "AES");
 
     KeyStore.SecretKeyEntry entry = new KeyStore.SecretKeyEntry(signingKey);
-    ks.setEntry(ssKeyAlias, entry,
+    ks.setEntry(SHARED_KEY_ALIAS, entry,
             new KeyProtection.Builder(KeyProperties.PURPOSE_ENCRYPT)
                     .build());
 
 
     ////// cant find a way to store key for ChaCha20 in keystore
     // so enc shared key and store in shared pref
-    SecretKey encSSKey = CryptoUtils.getSecretKeyAES(encSSKeyAlias,false);
+    SecretKey encSSKey = CryptoUtils.getSecretKeyAES(ENCRYPTOR_KEY_ALIAS,false);
     String b64EncTextWithIV = CryptoUtils.encryptAESGCM(encSSKey,derivedSharedSecret);
 
     return b64EncTextWithIV;
   }
 
-  public static byte[][] getKeyPair() throws Exception {
+  public static byte[][] genKeyPair() throws Exception {
 //    KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
 //    keyStore.load(null);
 
@@ -167,7 +166,7 @@ public class CurveX25519 {
 
     /*
     kpg.initialize(new KeyGenParameterSpec.Builder(
-            masterKeyAlias,
+            MASTER_KEY_ALIAS,
             KeyProperties.PURPOSE_SIGN | KeyProperties.PURPOSE_VERIFY| KeyProperties.PURPOSE_AGREE_KEY)
             .setAlgorithmParameterSpec(new ECGenParameterSpec("secp256r1"))
             .setDigests(KeyProperties.DIGEST_SHA256,
@@ -176,7 +175,7 @@ public class CurveX25519 {
     */
 
     kpg.initialize(new KeyGenParameterSpec.Builder(
-          masterKeyAlias,
+            MASTER_KEY_ALIAS,
           KeyProperties.PURPOSE_AGREE_KEY)
             .setIsStrongBoxBacked(false)
             .setAlgorithmParameterSpec(new ECGenParameterSpec("x25519"))
@@ -194,12 +193,12 @@ public class CurveX25519 {
 //    //////////////////
 //    KeyStore ks = KeyStore.getInstance("AndroidKeyStore");
 //    ks.load(null);
-////    KeyStore.Entry entry = ks.getEntry(masterKeyAlias, null);
-//    Key privKey = ks.getKey(masterKeyAlias, null);
-////    ks.getCertificate(masterKeyAlias)
+////    KeyStore.Entry entry = ks.getEntry(MASTER_KEY_ALIAS, null);
+//    Key privKey = ks.getKey(MASTER_KEY_ALIAS, null);
+////    ks.getCertificate(MASTER_KEY_ALIAS)
 ////    PrivateKey privKey = ((PrivateKeyEntry) entry).getPrivateKey();
 //
-//    Certificate []certificates = ks.getCertificateChain(masterKeyAlias);
+//    Certificate []certificates = ks.getCertificateChain(MASTER_KEY_ALIAS);
 //    Log.w("XCryptoModule", "certificates: "+String.valueOf(certificates.length));
 //    X509Certificate attestationCert = (X509Certificate) certificates[0];
 //    Log.w("XCryptoModule", "certificates: "+Base64.getEncoder().encodeToString(attestationCert.getPublicKey().getEncoded()));

@@ -34,7 +34,7 @@ import javax.crypto.spec.GCMParameterSpec;
 public class CryptoUtils {
     public static final String TAG = "XCryptoModule";
 
-    protected static String encryptAESGCM(SecretKey key, byte[] data) throws Exception {
+    public static String encryptAESGCM(SecretKey key, byte[] data) throws Exception {
         Cipher c = Cipher.getInstance("AES/GCM/NoPadding");
         c.init(Cipher.ENCRYPT_MODE, key);
 
@@ -48,7 +48,7 @@ public class CryptoUtils {
 
         return Base64.getEncoder().encodeToString(output);
     }
-    protected static byte[] decryptAESGCM(SecretKey key, String  b64EncTextWithIV) throws Exception {
+    public static byte[] decryptAESGCM(SecretKey key, String  b64EncTextWithIV) throws Exception {
         byte[] encTextWithIVBytes= Base64.getDecoder().decode(b64EncTextWithIV);
 
         byte[] iv=new byte[12];
@@ -62,7 +62,7 @@ public class CryptoUtils {
 
         return originalData;
     }
-    protected static SecretKey getSecretKeyAES(String alias, boolean isStrongBoxBacked) throws Exception {
+    public static SecretKey getSecretKeyAES(String alias, boolean isStrongBoxBacked) throws Exception {
         KeyStore ks = KeyStore.getInstance("AndroidKeyStore");
         ks.load(null);
 
@@ -82,7 +82,7 @@ public class CryptoUtils {
         return keyGenerator.generateKey();
     }
 
-    protected static BigInteger hexToBigInteger(boolean clearHighBit, String str) {
+    public static BigInteger hexToBigInteger(boolean clearHighBit, String str) {
         BigInteger result = BigInteger.ZERO;
         for (int i = 0; i < str.length() / 2; i++) {
             int curVal = Character.digit(str.charAt(2 * i), 16);
@@ -95,7 +95,7 @@ public class CryptoUtils {
         }
         return result;
     }
-    protected static byte[] hexToBytes(String str) {
+    public static byte[] hexToBytes(String str) {
         byte[] result = new byte[str.length() / 2];
         for (int i = 0; i < result.length; i++) {
             result[i] = (byte) Character.digit(str.charAt(2 * i), 16);
@@ -104,7 +104,7 @@ public class CryptoUtils {
         }
         return result;
     }
-    protected static String bytesToHex(byte[] bytes) {
+    public static String bytesToHex(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
         for (byte b : bytes) {
             sb.append(String.format("%02x", b));

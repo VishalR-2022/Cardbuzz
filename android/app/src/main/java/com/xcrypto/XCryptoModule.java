@@ -57,9 +57,9 @@ public class XCryptoModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void getX25519KeyPair(Promise promise) {
+  public void genX25519KeyPair(Promise promise) {
     try {
-      byte[][] keyPair = CurveX25519.getKeyPair();
+      byte[][] keyPair = CurveX25519.genKeyPair();
       WritableMap mp=Arguments.createMap();
 
       String b64PubKey=Base64.getEncoder().encodeToString(keyPair[0]);
@@ -79,9 +79,26 @@ public class XCryptoModule extends ReactContextBaseJavaModule {
       promise.reject("Create Event Error", e);
     }
   }
-
   @ReactMethod
-  public void getSharedKey(String b64PubKeyPeerPem,Promise promise) {
+  public void getSharedKeyDecoded(Promise promise) {
+    try{
+    // this is seriously bad func as it exposes the secret key :|
+    SharedPreferences pref = this.context.getSharedPreferences(SHARED_PREFENCE_NAME, Context.MODE_PRIVATE);
+    String b64EncTextWithIV = pref.getString(ENCRYPTEDKEY_KEY, null);
+
+    byte[] derivedSharedSecret=null;
+    if (b64EncTextWithIV!=null){
+      SecretKey encSSKey = CryptoUtils.getSecretKeyAES("encryptorkey",false);
+      derivedSharedSecret = CryptoUtils.decryptAESGCM(encSSKey,b64EncTextWithIV);
+    }
+    promise.resolve(Base64.getEncoder().encodeToString(derivedSharedSecret));
+    }catch(Exception e) {
+      promise.reject("Create Event Error", e);
+    }
+
+  }
+  @ReactMethod
+  public void genSharedKey(String b64PubKeyPeerPem,Promise promise) {
    try{
 
      String pubKeyPem=new String(Base64.getDecoder().decode(b64PubKeyPeerPem.getBytes()));
@@ -91,7 +108,8 @@ public class XCryptoModule extends ReactContextBaseJavaModule {
              .replace("-----END PUBLIC KEY-----", "");
 
 
-     String enryptedKeyB64 = CurveX25519.getSharedKey(b64PubKeyPeer);
+     String enryptedKeyB64 = CurveX25519.genSharedKey(b64PubKeyPeer);
+
      SharedPreferences pref = this.context.getSharedPreferences(SHARED_PREFENCE_NAME, Context.MODE_PRIVATE);
      SharedPreferences.Editor edit = pref.edit();
      edit.putString(ENCRYPTEDKEY_KEY, enryptedKeyB64);
@@ -123,6 +141,7 @@ public class XCryptoModule extends ReactContextBaseJavaModule {
 //        key = new SecretKeySpec(keyBytes, 0, keyBytes.length, "AES");
 //      }
       SharedPreferences pref = this.context.getSharedPreferences(SHARED_PREFENCE_NAME, Context.MODE_PRIVATE);
+
       String enryptedKeyB64 = pref.getString(ENCRYPTEDKEY_KEY, null);
 
       byte[][] ret=ChaCha20Poly1305.encrypt(data,enryptedKeyB64);

@@ -1,10 +1,5 @@
-const {DEVICE_ID, PUBLIC_KEY} = require('./constant');
-const crypto = require('../crypto-custom');
-// import crypto from '../crypto-custom';
-// import crypto from '../c11rypto';
-import {Buffer} from 'buffer';
-import XCrypto from './XCryptoModule';
-import { httpClient } from './httpClient';
+import {DEVICE_ID, PUBLIC_KEY} from '../constant';
+import XCrypto from '../XCryptoModule';
 
 const SecurePK = {
   priv_key_b64: '',
@@ -14,7 +9,7 @@ const SecurePK = {
 
 async function genX25519KeyPair() {
   // stores the priv key in KeyStore
-  const kp = await XCrypto.getX25519KeyPair();
+  const kp = await XCrypto.genX25519KeyPair();
   return kp.pubKeyPem;
 }
 
@@ -54,9 +49,15 @@ async function genSharedSecret(pub_key_peer) {
     console.log('pub_key_peer invalid');
     return;
   }
-  const shared_key = await XCrypto.getSharedKey(pub_key_peer);
-  console.log('shared_key=', shared_key);
-  return shared_key;
+  const ok = await XCrypto.genSharedKey(pub_key_peer);
+  console.log('ok=', ok);
+  return ok;
+}
+
+async function getSharedKeyDecoded() {
+  const sharedKeyDecoded_b64 = await XCrypto.getSharedKeyDecoded();
+  console.log('sharedKeyDecoded_b64=', sharedKeyDecoded_b64);
+  return sharedKeyDecoded_b64;
 }
 
 async function genRandomKey_b64() {
@@ -67,14 +68,18 @@ async function genRandomKey_b64() {
 }
 
 async function encKey(data) {
-  const encryptedData = await XCrypto.encryptRSA(data);
   console.log('data=', data);
+  const encryptedData = await XCrypto.encryptRSA(data);
   console.log('encryptedData=', encryptedData);
+  // const pub_key_peer =
+  // 'LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUNvd0JRWURLMlZ1QXlFQVhCeFY3cWxxMXlGc3RIOThvakp4c0xBTUNiQytncVlNL1BGS0l5MUJ0VXc9Ci0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQo=';
+  // console.log(await genSharedSecret(pub_key_peer));
 
   return encryptedData;
 }
 
 async function encPayload(data) {
+
   const payload = JSON.stringify(data);
   let ret = null;
   try {
@@ -112,6 +117,7 @@ async function testHarness() {
     'LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUNvd0JRWURLMlZ1QXlFQVhCeFY3cWxxMXlGc3RIOThvakp4c0xBTUNiQytncVlNL1BGS0l5MUJ0VXc9Ci0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQo=';
   console.log(await genSharedSecret(pub_key_peer));
 
+  console.log(await getSharedKeyDecoded());
   // sample req data
   const data = {
     country_code: '91',
@@ -122,6 +128,7 @@ async function testHarness() {
   };
   const ret = await encPayload(data);
 
+  console.log(ret)
   const key = await encKey(ret.key)
 
   const payload = {
@@ -149,4 +156,4 @@ async function testHarness() {
   // return;
 }
 
-export {testHarness, verifySign, refreshAccessToken};
+export {encPayload, verifySign, refreshAccessToken, encKey, genSharedSecret, getSharedKeyDecoded};
