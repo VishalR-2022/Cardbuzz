@@ -14,6 +14,7 @@ import BackButton from "../components/BackButton";
 import { useSelector, useDispatch } from "react-redux";
 import { resendOTP, verifySignupOTP } from "../service/request/create_user";
 import { setAccessToken } from "../store/slice/authSlice";
+import { postResendOtp, postVerifySignupOTP } from "../hooks/useAuthApi";
 
 const VerificationOtpSignUp = () => {
   const OTP = "117123"; // Replace with actual OTP
@@ -29,10 +30,10 @@ const VerificationOtpSignUp = () => {
       country_code: "91",
       phone: phoneNumber,
     };
-    const response = await verifySignupOTP(userData, accessToken, OTP );
-    console.log(response,'+++++++++')
-    if (response?.success === "OK") {
-      dispatch(setAccessToken({ token: response.data.access_token }))
+    const response = await postVerifySignupOTP({userData, OTP: OTP})
+    // const response = await verifySignupOTP(userData, accessToken, OTP );
+    // console.log(response,'+++++++++')
+    if (response) {
       setLogin(true);
     }
   };
@@ -42,7 +43,6 @@ const VerificationOtpSignUp = () => {
       setLogin(false);
       navigation.navigate("CreatePin");
     }
-    console.log("Invalid OTP!");
   };
 
   const handleResendOTP = async() => {
@@ -50,7 +50,7 @@ const VerificationOtpSignUp = () => {
       country_code: "91",
       phone: phoneNumber,
     };
-    await resendOTP(userData, accessToken)
+    await postResendOtp({userData})
   }
 
   function renderTop() {

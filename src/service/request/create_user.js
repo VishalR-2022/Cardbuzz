@@ -1,6 +1,6 @@
 import { DEVICE_ID, PUBLIC_KEY } from "../constant";
 import { httpClient } from "../httpClient";
-const { encPayload, encKey, getSharedKeyDecoded } = require("./utils");
+const { encPayload, encKey, getSharedKeyDecoded } = require("../utils");
 import XCrypto from "../XCryptoModule";
 
 async function createUser({ country_code, phone }) {

@@ -6,7 +6,7 @@ const {
   JWT_TOKENS,
 } = require("./constant");
 const { sign } = require("./signer");
-const { verifySign } = require("./request/utils");
+const { verifySign } = require("./utils");
 import uuid from 'react-native-uuid';
 
 const httpClient = axios.create({
@@ -73,12 +73,11 @@ httpClient.interceptors.response.use(
     return resp;
   },
   async (error) => {
-    const err = error.response?.data;
+    const err = error.response?.data?.detail;
+    console.log('errrrr: - ', err)
     // err={err:{code,msg}}
-     console.log(err, 'errrr');
     if (err?.code == 20010) {
       // make a call to refresh token
-      await getRefreshToken(JWT_TOKENS.refresh);
       // and then call the original req (for which this token expired err came)
     }
 

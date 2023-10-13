@@ -1,10 +1,10 @@
-import {DEVICE_ID, PUBLIC_KEY} from '../constant';
-import XCrypto from '../XCryptoModule';
+import { DEVICE_ID, PUBLIC_KEY } from "./constant";
+import XCrypto from "./XCryptoModule";
 
 const SecurePK = {
-  priv_key_b64: '',
-  peer_pub_key_b64: '',
-  shared_secret_key_b64: '',
+  priv_key_b64: "",
+  peer_pub_key_b64: "",
+  shared_secret_key_b64: "",
 };
 
 async function genX25519KeyPair() {
@@ -14,7 +14,7 @@ async function genX25519KeyPair() {
 }
 
 async function refreshAccessToken(refresh_token) {
-  const secretkey = genRandomKey_b64();
+  const secretkey = getSharedKeyDecoded();
   const key = encKey(secretkey);
   const config = {
     method: "get",
@@ -30,7 +30,7 @@ async function refreshAccessToken(refresh_token) {
 
   try {
     let res = await httpClient(config);
-    console.log(res.data);
+    return res.data;
   } catch (e) {
     console.log(e.toString());
     e = !e; // HANDLE error
@@ -40,37 +40,40 @@ async function refreshAccessToken(refresh_token) {
 }
 
 async function genSharedSecret(pub_key_peer) {
-  if (typeof pub_key_peer === 'undefined') {
-    console.log('pub_key_peer missing');
+  if (typeof pub_key_peer === "undefined") {
+    console.log("pub_key_peer missing");
     return;
   }
   pub_key_peer = pub_key_peer.trim();
   if (pub_key_peer.length === 0) {
-    console.log('pub_key_peer invalid');
+    console.log("pub_key_peer invalid");
     return;
   }
   const ok = await XCrypto.genSharedKey(pub_key_peer);
-  console.log('ok=', ok);
+  console.log("ok=", ok);
   return ok;
 }
 
 async function getSharedKeyDecoded() {
   const sharedKeyDecoded_b64 = await XCrypto.getSharedKeyDecoded();
-  console.log('sharedKeyDecoded_b64=', sharedKeyDecoded_b64);
+  console.log("sharedKeyDecoded_b64=", sharedKeyDecoded_b64);
   return sharedKeyDecoded_b64;
 }
 
 async function genRandomKey_b64() {
   const key = await XCrypto.getChaChaKey();
-  console.log('key=', key);
+  console.log("key=", key);
 
   return key;
 }
 
 async function encKey(data) {
-  console.log('data=', data);
+  console.log("data=", data);
+  if (data === null) {
+    data = await getSharedKeyDecoded()
+  }
   const encryptedData = await XCrypto.encryptRSA(data);
-  console.log('encryptedData=', encryptedData);
+  console.log("encryptedData=", encryptedData);
   // const pub_key_peer =
   // 'LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUNvd0JRWURLMlZ1QXlFQVhCeFY3cWxxMXlGc3RIOThvakp4c0xBTUNiQytncVlNL1BGS0l5MUJ0VXc9Ci0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQo=';
   // console.log(await genSharedSecret(pub_key_peer));
@@ -79,7 +82,6 @@ async function encKey(data) {
 }
 
 async function encPayload(data) {
-
   const payload = JSON.stringify(data);
   let ret = null;
   try {
@@ -94,9 +96,9 @@ async function verifySign(x_hmac_tag, response_body, in_signature) {
   const verified = await XCrypto.verifySignature(
     x_hmac_tag,
     response_body,
-    in_signature,
+    in_signature
   );
-  console.log('verified=', verified);
+  console.log("verified=", verified);
 
   return verified;
 }
@@ -109,27 +111,27 @@ async function testHarness() {
   await XCrypto.loadRSAKey(PUBLIC_KEY);
   /////////////////////////////////////////////////
 
-//  console.log(await genX25519KeyPair());
+  //  console.log(await genX25519KeyPair());
 
   console.log(await genRandomKey_b64());
 
   const pub_key_peer =
-    'LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUNvd0JRWURLMlZ1QXlFQVhCeFY3cWxxMXlGc3RIOThvakp4c0xBTUNiQytncVlNL1BGS0l5MUJ0VXc9Ci0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQo=';
+    "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUNvd0JRWURLMlZ1QXlFQVhCeFY3cWxxMXlGc3RIOThvakp4c0xBTUNiQytncVlNL1BGS0l5MUJ0VXc9Ci0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQo=";
   console.log(await genSharedSecret(pub_key_peer));
 
   console.log(await getSharedKeyDecoded());
   // sample req data
   const data = {
-    country_code: '91',
-    phone: '1234567890',
+    country_code: "91",
+    phone: "1234567890",
     device_id: DEVICE_ID,
-    fcm_reg_token: 'xxx2x-yyyyy',
+    fcm_reg_token: "xxx2x-yyyyy",
     // created_at: new Date().toISOString(),
   };
   const ret = await encPayload(data);
 
-  console.log(ret)
-  const key = await encKey(ret.key)
+  console.log(ret);
+  const key = await encKey(ret.key);
 
   const payload = {
     body: ret.cipherText,
@@ -152,8 +154,15 @@ async function testHarness() {
   } catch (e) {
     console.log(e);
     e = !e; // HANDLE error
-  }  // console.log(await encKey(ret.key));
-  // return;
+  }
 }
 
-export {encPayload, verifySign, refreshAccessToken, encKey, genSharedSecret, getSharedKeyDecoded, genX25519KeyPair};
+export {
+  encPayload,
+  verifySign,
+  refreshAccessToken,
+  encKey,
+  genSharedSecret,
+  getSharedKeyDecoded,
+  genX25519KeyPair,
+};

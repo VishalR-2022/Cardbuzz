@@ -13,8 +13,8 @@ import { COLORS } from "../constants/theme";
 import { Button } from "../components";
 import { useDispatch } from "react-redux";
 import { login, setAccessToken } from "../store/slice/authSlice";
-import { createUser, resendOTP } from "../service/request/create_user";
-import { testHarness } from "../service/request/utils";
+import { createUser } from "../service/cardbuzzApi";
+import { postCreateUser } from "../hooks/useAuthApi";
 
 const OnBoarding = () => {
   const navigation = useNavigation();
@@ -29,45 +29,16 @@ const OnBoarding = () => {
   }, [value]);
 
   const handleSubmit = async () => {
-    // try {
-    //   const registrationData = {
-    //     country_code: "+91",
-    //     contact_number: formattedValue,
-    //     device_id: DEVICE_ID, // Replace with the actual device ID
-    //     notification_token: "Notification1234abcd", // Replace with the actual notification token
-    //     phone_model: "Galaxy S21", // Replace with the actual phone model
-    //     os: "Android",
-    //     os_version: "2.0.5", // Replace with the actual OS version
-    //   };
-
-    //   const response = await AuthService.register(registrationData);
-
-    //   const token = response.data.token;
-    //   await saveToken(token); // Save the token to keychain
-
-    //   setValue("");
-    //   setFormattedValue("");
-    //   navigation.navigate("VerificationOtpSignUp");
-    // } catch (error) {
-    //   console.error("Registration failed:", error);
-    //   // Handle error here
-    // }
-// await testHarness()
     const user_data = {
       country_code: "91",
       phone: value,
     };
-
-    const response = await createUser(user_data);
-    
-    console.log(response, '-------------------')
-    if (response?.success === "OK") {
-      // await resendOTP(user_data, response.data.access);
+    const response = await postCreateUser(user_data);
+    if (response) {
       dispatch(login({ mobileNumber: value }));
-      dispatch(setAccessToken({ token: response.data.access }))
-      navigation.navigate("VerificationOtpSignUp");
       setValue("");
       setFormattedValue("");
+      navigation.navigate("VerificationOtpSignUp");
     }
   };
 

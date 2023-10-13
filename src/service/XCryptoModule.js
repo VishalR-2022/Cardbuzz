@@ -1,4 +1,4 @@
-import {NativeModules} from 'react-native';
-const {XCryptoModule} = NativeModules;
+import { NativeModules } from "react-native";
+const { XCryptoModule } = NativeModules;
 
 export default XCryptoModule;

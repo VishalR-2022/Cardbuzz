@@ -7,12 +7,12 @@ import { useNavigation } from "@react-navigation/native";
 import { savePin } from "../store/slice/authSlice";
 import { createUserPin } from "../service/request/create_user_pin";
 import { useSelector, useDispatch } from "react-redux";
+import { checkPlainReq, postCreateUserPin } from "../hooks/useAuthApi";
 
 const CreatePin = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const phoneNumber = useSelector(state => state.auth.mobileNumber)
-  const accessToken = useSelector(state => state.auth.accessToken)
+  const phoneNumber = useSelector((state) => state.auth.mobileNumber);
   const [reset, setReset] = useState(false);
   const [pin, setPin] = useState("");
   const [check, setCheck] = useState("");
@@ -41,15 +41,17 @@ const CreatePin = ({ route }) => {
           country_code: "91",
           phone: phoneNumber,
         };
-        const response = await createUserPin(userData, accessToken, pin)
-        // dispatch(savePin({ pin: pin }));
-        // setPin("");
-        // setCheck("");
-        // setDisable(false);
-        // setError(null);
-        // navigation.navigate("PinSuccess", {
-        //   reset: reset,
-        // });
+
+        const response = await postCreateUserPin({ userData, pin });
+        if (response) {
+          setPin("");
+          setCheck("");
+          setDisable(false);
+          setError(null);
+          navigation.navigate("PinSuccess", {
+            reset: reset,
+          });
+        }
       } else {
         setError(true);
       }
