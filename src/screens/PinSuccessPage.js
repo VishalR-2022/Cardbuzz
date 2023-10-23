@@ -15,7 +15,7 @@ const SuccessfulPinSet = ({ route }) => {
   return (
     <Success
       text={reset ? "PIN Updated Successfully" : "PIN Created Successfully"}
-      onPress={() => navigation.navigate(reset ? "Root" : "PinLogin")}
+      onPress={() => navigation.navigate(reset ? "Root" : "AddDetails")}
     />
   );
 };

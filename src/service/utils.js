@@ -1,11 +1,13 @@
 import { DEVICE_ID, PUBLIC_KEY } from "./constant";
 import XCrypto from "./XCryptoModule";
 
-const SecurePK = {
-  priv_key_b64: "",
-  peer_pub_key_b64: "",
-  shared_secret_key_b64: "",
-};
+async function loadServerPubKey() {
+  /////////////////////////////////////////////////
+  // load server pub key
+  // this is on app load. one time call. chk where best to call and how
+  /////////////////////////////////////////////////
+  await XCrypto.loadRSAKey(PUBLIC_KEY);
+ }
 
 async function genX25519KeyPair() {
   // stores the priv key in KeyStore
@@ -108,7 +110,6 @@ async function testHarness() {
   // load server pub key
   // this is on app load. one time call. chk where best to call and how
   /////////////////////////////////////////////////
-  await XCrypto.loadRSAKey(PUBLIC_KEY);
   /////////////////////////////////////////////////
 
   //  console.log(await genX25519KeyPair());
@@ -165,4 +166,5 @@ export {
   genSharedSecret,
   getSharedKeyDecoded,
   genX25519KeyPair,
+  loadServerPubKey,
 };

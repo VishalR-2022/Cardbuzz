@@ -12,7 +12,7 @@ import { AndroidSafeArea, COLORS } from "../constants/theme";
 import { useNavigation } from "@react-navigation/native";
 import BackButton from "../components/BackButton";
 import { useSelector, useDispatch } from "react-redux";
-import { resendOTP, verifySignupOTP } from "../service/request/create_user";
+import { resendOTP, verifySignupOTP } from "../service/request/authReq/create_user";
 import { setAccessToken } from "../store/slice/authSlice";
 import { postResendOtp, postVerifySignupOTP } from "../hooks/useAuthApi";
 

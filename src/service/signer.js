@@ -1,5 +1,5 @@
 const crypto = require("../../crypto-custom");
-import { Buffer } from 'buffer';
+import { Buffer } from "buffer";
 
 function encodeRfc3986(urlEncodedString) {
   // assuming string has already been percent encoded
@@ -95,12 +95,22 @@ const canonicalize_query_string = (params) => {
 const req_payload_hash = (body) => {
   if (body === null || typeof body === "undefined") return "";
 
-  console.log("-----------------------------------------------");
-  console.log("body=", typeof body);
-  console.log("body=", body);
-  console.log("-----------------------------------------------");
   let body_text = JSON.stringify(body);
   // const body_text = body.toString();
+
+  const formDataToJson = function (f) {
+    return Object.fromEntries(
+      Array.from(f.keys(), (k) => {
+        console.log(typeof f.get(k));
+        return k.endsWith("[]") ? [k.slice(0, -2), f.getAll(k)] : [k, f.get(k)];
+      })
+    );
+  };
+
+  // if (body instanceof FormData) {
+  //   return "";
+  // }
+
   const digest = crypto.createHash("sha256").update(body_text).digest("hex");
   return digest;
 };
@@ -118,7 +128,8 @@ const sign = (
   { url, method, params, data: body = null, headers },
   key,
   signed_headers,
-  api_endpoint
+  api_endpoint,
+  skipBodyHash = false
 ) => {
   secretKey = Buffer.from(key, "base64");
   if (!url.startsWith("http://") || !url.startsWith("https://")) {
@@ -130,7 +141,10 @@ const sign = (
   const req_uri = canonicalize_uri(url);
   const qs = canonicalize_query_string(params);
   const hs = canonicalize_headers(headers, signed_headers);
-  const body_hash = req_payload_hash(body);
+  let body_hash = "";
+  if (!skipBodyHash) {
+    body_hash = req_payload_hash(body);
+  }
 
   const canonicalizedRequest = [req_method, req_uri, qs, hs, body_hash].join(
     "\n"

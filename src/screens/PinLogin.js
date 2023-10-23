@@ -11,7 +11,7 @@ import { BackButton, BoxTextField, Button } from "../components";
 import { AndroidSafeArea, COLORS } from "../constants/theme";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
-import { postLoginViaPin, postLogout, postResetPin, postVerifyPin } from "../hooks/useAuthApi";
+// import { postLoginViaPin, postLogout, postResetPin, postVerifyPin } from "../hooks/useAuthApi";
 
 const PinLogin = () => {
   const navigation = useNavigation();
@@ -33,11 +33,11 @@ const PinLogin = () => {
       };
       // const response = await postLoginViaPin({ userData, pin });
       //  const response = await postVerifyPin({userData, pin});
-        // const response = await postResetPin({userData, oldPin: '1234', newPin: '1111'})
-const response = await postLogout();
-      console.log(response, 'postLogin');
+      // const response = await postResetPin({userData, oldPin: '1234', newPin: '1111'})
+      // const response = await postLogout();
+      // console.log(response, 'postLogin');
       // if (pin === password) {
-      //   navigation.navigate("AddDetails");
+        // navigation.navigate("AddDetails");
       //   setPin("");
       //   setError(null);
       // } else {

@@ -5,7 +5,7 @@ import { BackButton, BoxTextField, Button } from "../components";
 import { AndroidSafeArea, COLORS } from "../constants/theme";
 import { useNavigation } from "@react-navigation/native";
 import { savePin } from "../store/slice/authSlice";
-import { createUserPin } from "../service/request/create_user_pin";
+import { createUserPin } from "../service/request/authReq/create_user_pin";
 import { useSelector, useDispatch } from "react-redux";
 import { checkPlainReq, postCreateUserPin } from "../hooks/useAuthApi";
 

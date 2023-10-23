@@ -1,6 +1,6 @@
-import { DEVICE_ID, PUBLIC_KEY } from "../constant";
-import { httpClient } from "../httpClient";
-const { encPayload, encKey, genX25519KeyPair } = require("../utils");
+import { DEVICE_ID, PUBLIC_KEY } from "../../constant";
+import { httpClient } from "../../httpClient";
+const { encPayload, encKey, genX25519KeyPair } = require("../../utils");
 // ----------------------------------------------
 // ----------------------------------------------
 
