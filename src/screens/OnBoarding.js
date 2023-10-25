@@ -15,9 +15,13 @@ import { useDispatch } from "react-redux";
 import { login, setAccessToken } from "../store/slice/authSlice";
 import { createUser } from "../service/cardbuzzApi";
 import { postCreateUser } from "../hooks/useAuthApi";
+import {NativeModules} from 'react-native';
+
+const { UPI } = NativeModules;
 
 const OnBoarding = () => {
   const navigation = useNavigation();
+  // console.log(UPI);
   const [value, setValue] = useState("");
   const [formattedValue, setFormattedValue] = useState("");
   const [valid, setValid] = useState(null);
@@ -29,17 +33,23 @@ const OnBoarding = () => {
   }, [value]);
 
   const handleSubmit = async () => {
-    const user_data = {
-      country_code: "91",
-      phone: value,
-    };
-    const response = await postCreateUser(user_data);
-    if (response) {
-      dispatch(login({ mobileNumber: value }));
-      setValue("");
-      setFormattedValue("");
-      navigation.navigate("VerificationOtpSignUp");
-    }
+    const amount = 1;
+    let UpiUrl = "upi://pay?pa=9922627157@paytm&pn=%20&tr=%20&am="+amount+"&cu=INR";
+    let response = await UPI.openLink(UpiUrl);
+
+    console.log(response);
+    // const user_data = {
+    //   country_code: "91",
+    //   phone: value,
+    // };
+    // const response = await postCreateUser(user_data);
+    // if (response) {
+    //   dispatch(login({ mobileNumber: value }));
+    //   setValue("");
+    //   setFormattedValue("");
+    //   navigation.navigate("VerificationOtpSignUp");
+    // }
+
   };
 
   function renderTop() {
