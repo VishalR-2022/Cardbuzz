@@ -30,7 +30,6 @@ export const postCreateUser = async (data) => {
 
 export const postResendOtp = async (data) => {
   const accessToken = await EncryptedStorage.getItem("access_token_login");
-  console.log(accessToken);
   const response = await resendOTP(data.userData, accessToken);
   if (response?.success === "OK") {
     return true;

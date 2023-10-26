@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import {
@@ -58,13 +58,29 @@ import {
 import { useSelector } from "react-redux";
 import PinLogin from "../screens/PinLogin";
 import AppDrawerNavigator from "./AppDrawer";
+import EncryptedStorage from "react-native-encrypted-storage";
+import { getSharedKeyDecoded } from "../service/utils";
 
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
-  const isLoggedIn = useSelector((state) => state.kyc.kycComplete);
+  const [sharedKey, setSharedKey] = useState(null);
 
-  return (
+  const isLoggedIn = async () => {
+    const accessToken = await EncryptedStorage.getItem("jwt_access_token");
+    const refreshToken = await EncryptedStorage.getItem("jwt_refresh_token");
+    if (accessToken && refreshToken) {
+      setSharedKey(await getSharedKeyDecoded());
+    } else {
+      setSharedKey('onboard')
+    }
+  };
+
+  useEffect(() => {
+    isLoggedIn();
+  }, []);
+
+  if(sharedKey) {return (
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
@@ -74,10 +90,12 @@ const AppNavigator = () => {
         },
         headerShown: false,
       }}
-      initialRouteName="OnBoarding"
+      initialRouteName={sharedKey !== 'onboard' ? "PinLogin" : "OnBoarding"}
     >
+    {console.log(sharedKey ? "PinLogin" : "OnBoarding", 'try')}
       {/* ---------------------OnBoarding------------------- */}
 
+      <Stack.Screen name="PinLogin" component={PinLogin} />
       <Stack.Screen name="OnBoarding" component={OnBoarding} />
       <Stack.Screen
         name="VerificationOtpSignUp"
@@ -89,7 +107,6 @@ const AppNavigator = () => {
       />
       <Stack.Screen name="CreatePin" component={CreatePin} />
       <Stack.Screen name="PinSuccess" component={SuccessfulPinSet} />
-      <Stack.Screen name="PinLogin" component={PinLogin} />
       <Stack.Screen name="AddDetails" component={AddDetails} />
       <Stack.Screen name="UploadPicture" component={UploadPicture} />
       {/* //TODO: KYC PAGE NOT COMPLETED WITH UI  */}
@@ -170,7 +187,7 @@ const AppNavigator = () => {
         component={PopUpWarningWalletMoney}
       />
     </Stack.Navigator>
-  );
+  );}
 };
 
 export default AppNavigator;
