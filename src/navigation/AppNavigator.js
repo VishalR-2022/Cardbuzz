@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import {
@@ -74,7 +74,7 @@ const AppNavigator = () => {
         },
         headerShown: false,
       }}
-      initialRouteName="OnBoarding"
+      initialRouteName={"OnBoarding"}
     >
       {/* ---------------------OnBoarding------------------- */}
 

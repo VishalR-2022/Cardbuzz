@@ -1,4 +1,4 @@
-package com.cardbuzz;
+package com.payline;
 
 import android.os.Build;
 import android.os.Bundle;

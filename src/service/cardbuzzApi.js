@@ -27,7 +27,7 @@ export async function plainReqGet(key, access_token) {
   return;
 }
 export async function plainReqPost(key, access_token) {
-  let body = { website: "cardbuzz.in" };
+  let body = { website: "payline.in" };
 
   const config = {
     method: "post",
@@ -77,7 +77,7 @@ export async function encReqGet(key, access_token) {
   return;
 }
 export async function encReqPost(key, access_token) {
-  let body = { website: "cardbuzz.in", ping: "pong" };
+  let body = { website: "payline.in", ping: "pong" };
 
   const data = await encPayload(body);
   const payload = {

@@ -15,6 +15,8 @@ import { useDispatch } from "react-redux";
 import { login, setAccessToken } from "../store/slice/authSlice";
 import { createUser } from "../service/cardbuzzApi";
 import { postCreateUser } from "../hooks/useAuthApi";
+import EncryptedStorage from "react-native-encrypted-storage";
+import { getSharedKeyDecoded } from "../service/utils";
 
 const OnBoarding = () => {
   const navigation = useNavigation();
@@ -23,6 +25,21 @@ const OnBoarding = () => {
   const [valid, setValid] = useState(null);
   const phoneInput = useRef(null);
   const dispatch = useDispatch();
+
+  const redirect = async () => {
+    const accessToken = await EncryptedStorage.getItem("jwt_access_token");
+    const refreshToken = await EncryptedStorage.getItem("jwt_refresh_token");
+    if (Boolean(accessToken) && Boolean(refreshToken)) {
+      const secretKey = await getSharedKeyDecoded();
+      if(Boolean(secretKey)) {
+        navigation.navigate("Root");
+      }
+    }
+  }
+  
+  useEffect(() => {
+    redirect()
+  }, []);
 
   useEffect(() => {
     setValid(phoneInput.current?.isValidNumber(value));
@@ -47,8 +64,8 @@ const OnBoarding = () => {
       <View>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.Primary} />
         <Image
-          style={{ width: "100%", marginTop: -90 }}
-          source={require("../assets/images/onboarding.png")}
+          style={{ alignSelf: "center", height: 250, width: 250 }}
+          source={require("../assets/images/logo.png")}
         />
       </View>
     );
@@ -58,11 +75,10 @@ const OnBoarding = () => {
     return (
       <View>
         <Text style={styles.headerTitle}>
-          Alipay Management In The Easiest Way
+          Seamless Payments, Endless Possibilities.
         </Text>
         <Text style={styles.headerPara}>
-          Start managing your wallet for a better and more organized future for
-          your life
+          Transact with Trust, Powered by CardBuzz.
         </Text>
       </View>
     );

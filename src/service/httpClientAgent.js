@@ -2,17 +2,17 @@ import axios from "axios";
 const {
   SIGNED_HEADERS,
   DEVICE_ID,
-  API_ENDPOINT,
+  API_Agent_ENDPOINT,
   JWT_TOKENS,
 } = require("./constant");
 const { sign } = require("./signer");
 import uuid from 'react-native-uuid';
 
-const httpClient = axios.create({
-  baseURL: `${API_ENDPOINT}`,
+const httpClientAgent = axios.create({
+  baseURL: `${API_Agent_ENDPOINT}`,
 });
 
-httpClient.interceptors.request.use((config) => {
+httpClientAgent.interceptors.request.use((config) => {
   if (
     !config.headers["Content-Type"] ||
     typeof config.headers["Content-Type"] === "undefined"
@@ -44,7 +44,7 @@ httpClient.interceptors.request.use((config) => {
   return config;
 });
 
-httpClient.interceptors.response.use(
+httpClientAgent.interceptors.response.use(
   (resp) => {
     return resp;
   },
@@ -59,4 +59,4 @@ httpClient.interceptors.response.use(
   }
 );
 
-module.exports = { httpClient };
+module.exports = { httpClientAgent };

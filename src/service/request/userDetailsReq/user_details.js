@@ -1,59 +1,57 @@
 import { DEVICE_ID, PUBLIC_KEY } from "../../constant";
-import { httpClient } from "../../httpClient";
-const { encPayload, encKey, getSharedKeyDecoded } = require("../../utils");
-const FormData = require('form-data');
-const fs = require('fs');
+import { httpClientAgent } from "../../httpClientAgent";
+const { encPayload, encKey } = require("../../utils");
 
 // ----------------------------------------------
 // ----------------------------------------------
 
-async function reqPostForm(key, access_token) {
-  let formData = new FormData();
+// async function reqPostForm(key, access_token) {
+//   let formData = new FormData();
 //   formData.append('image', fs.createReadStream('/Users/macbook/Desktop/Screenshot.png'));
-  const p = {
-    name: "Mr X Delhi",
-    bank_acc_number: "000598120021000",
-    bank_acc_ifsc: "HDFC0000001",
-    business_name: "Kabari Shop",
-    turnover: 2000000,
-    ownership_type: "PROPRIETARY",
-    city: "Belgaum",
-    district: "Belgaum",
-    state: "Maharashtra",
-    pincode: "591244",
-    latitude: "25",
-    longitude: "76",
-    address1: "My Address 11",
-    address2: "My address 22",
-    dob: (str = "01\/01\/1981"),
-  };
+//   const p = {
+//     name: "Mr X Delhi",
+//     bank_acc_number: "000598120021000",
+//     bank_acc_ifsc: "HDFC0000001",
+//     business_name: "Kabari Shop",
+//     turnover: 2000000,
+//     ownership_type: "PROPRIETARY",
+//     city: "Belgaum",
+//     district: "Belgaum",
+//     state: "Maharashtra",
+//     pincode: "591244",
+//     latitude: "25",
+//     longitude: "76",
+//     address1: "My Address 11",
+//     address2: "My address 22",
+//     dob: (str = "01\/01\/1981"),
+//   };
 
-  const data = encPayload(p, key);
-  formData.append('body', data.cipherText);
+//   const data = encPayload(p, key);
+//   formData.append('body', data.cipherText);
   
-  const config = {
-    method: "post",
-    url: `/profile`,
-    params: {
-      ts: +new Date(),
-    },
-    data: formData,
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-    signerSecretKey: key,
-  };
+//   const config = {
+//     method: "post",
+//     url: `/profile`,
+//     params: {
+//       ts: +new Date(),
+//     },
+//     data: formData,
+//     headers: {
+//       Authorization: `Bearer ${access_token}`,
+//     },
+//     signerSecretKey: key,
+//   };
 
-  try {
-    let res = await httpClient(config);
-    console.log(res.data);
-  } catch (e) {
-    e = !e; // do nothing with the error
-    console.log({ status: "FAIL" });
-  }
+//   try {
+//     let res = await httpClientAgent(config);
+//     console.log(res.data);
+//   } catch (e) {
+//     e = !e; // do nothing with the error
+//     console.log({ status: "FAIL" });
+//   }
 
-  return;
-}
+//   return;
+// }
 
 async function reqGet(key, access_token) {
   const config = {
@@ -67,7 +65,7 @@ async function reqGet(key, access_token) {
   };
 
   try {
-    let res = await httpClient(config);
+    let res = await httpClientAgent(config);
     console.log(res.data);
   } catch (e) {
     e = !e; // do nothing with the error
@@ -88,7 +86,7 @@ async function reqGetQR(key, access_token) {
   };
 
   try {
-    let res = await httpClient(config);
+    let res = await httpClientAgent(config);
     console.log(res.data);
   } catch (e) {
     e = !e; // do nothing with the error
@@ -104,7 +102,7 @@ async function reqPost(key, access_token) {
    */
   const p = {
     name: "Mr X Delhi",
-    bank_acc_number: "000598120021000",
+    bank_acc_number: "000598120089705",
     bank_acc_ifsc: "HDFC0000001",
     business_name: "Kabari Shop",
     turnover: 2000000,
@@ -120,7 +118,8 @@ async function reqPost(key, access_token) {
     dob: (str = "01\/01\/1981"),
   };
 
-  const data = encPayload(p, key);
+  const data = await encPayload(p);
+  console.log(data)
   const payload = {
     body: data.cipherText,
   };
@@ -138,11 +137,11 @@ async function reqPost(key, access_token) {
   };
 
   try {
-    let res = await httpClient(config);
+    let res = await httpClientAgent(config);
     console.log(res.data);
+    return res.data
   } catch (e) {
     e = !e; // do nothing with the error
-    console.log({ status: "FAIL" });
   }
 
   return;
@@ -173,7 +172,7 @@ async function reqPutKyc(key, access_token) {
   };
 
   try {
-    let res = await httpClient(config);
+    let res = await httpClientAgent(config);
     console.log(res.data);
   } catch (e) {
     e = !e; // do nothing with the error
@@ -183,4 +182,4 @@ async function reqPutKyc(key, access_token) {
   return;
 }
 
-module.exports = { reqGet, reqPost, reqPutKyc, reqGetQR, reqPostForm };
+module.exports = { reqGet, reqPost, reqPutKyc, reqGetQR };

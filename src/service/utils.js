@@ -58,7 +58,6 @@ async function genSharedSecret(pub_key_peer) {
 
 async function getSharedKeyDecoded() {
   const sharedKeyDecoded_b64 = await XCrypto.getSharedKeyDecoded();
-  console.log("sharedKeyDecoded_b64=", sharedKeyDecoded_b64);
   return sharedKeyDecoded_b64;
 }
 

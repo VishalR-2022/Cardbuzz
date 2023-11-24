@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "cardbuzz",
-    "slug": "cardbuzz",
+    "name": "payline",
+    "slug": "payline",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.developerhm.cardbuzz"
+      "package": "com.developerhm.payline"
     },
     "web": {
       "favicon": "./assets/favicon.png"

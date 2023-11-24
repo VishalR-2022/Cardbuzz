@@ -8,6 +8,7 @@ import BackButton from "../components/BackButton";
 import { useForm, Controller } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "../store/slice/userSlice";
+import { postUserProfile } from "../hooks/useAgentApi";
 
 const AddDetails = () => {
   const navigation = useNavigation();
@@ -20,11 +21,13 @@ const AddDetails = () => {
     getValues,
   } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (data.accountNumber === data.accountNumberCheck) {
+      const response = await postUserProfile()
+      if (response) {
       dispatch(setUserDetails(data));
       navigation.navigate("UploadPicture");
-    }
+    }}
   };
 
   return (

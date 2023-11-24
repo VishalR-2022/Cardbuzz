@@ -69,17 +69,10 @@ export const postCreateUserPin = async (data) => {
     await genSharedSecret(response.data.ppk);
     return true;
   }
-  //   else if(response?.code === 20012) {
-  //     if(response.msg === 'jwt token has been revoked/expired'){
-  //       const refreshToken = await EncryptedStorage.getItem("refresh_token");
 
-  //     const response = await refreshAccessToken(refreshToken);
-  //     console.log(response, 'refreshAccessToken');
-  //   }
-  // }
   else {
     console.log(response, "errrrrr");
-    return false;
+    return response;
   }
 };
 
