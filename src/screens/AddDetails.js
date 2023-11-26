@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Text, StyleSheet, SafeAreaView, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { TextField, Button, Divider } from "../components";
@@ -9,10 +9,15 @@ import { useForm, Controller } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "../store/slice/userSlice";
 import { postUserProfile } from "../hooks/useAgentApi";
+import { loadServerPubKey } from "../service/utils";
 
 const AddDetails = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    loadServerPubKey();
+  }, []);
 
   const {
     handleSubmit,
@@ -23,11 +28,12 @@ const AddDetails = () => {
 
   const onSubmit = async (data) => {
     if (data.accountNumber === data.accountNumberCheck) {
-      const response = await postUserProfile()
+      const response = await postUserProfile(data);
       if (response) {
-      dispatch(setUserDetails(data));
-      navigation.navigate("UploadPicture");
-    }}
+        dispatch(setUserDetails(data));
+        navigation.navigate("UploadPicture");
+      }
+    }
   };
 
   return (
@@ -92,9 +98,8 @@ const AddDetails = () => {
             {errors.address && (
               <Text style={styles.errorText}>{errors.address.message}</Text>
             )}
-            <View style={{marginTop:12}}>
-
-            <Divider />
+            <View style={{ marginTop: 12 }}>
+              <Divider />
             </View>
             <Controller
               control={control}
@@ -200,7 +205,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginBottom: 32,
     marginTop: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   errorText: {
     color: "red",

@@ -33,7 +33,6 @@ import GasBillRecharge from "./Home/GasBillRecharge";
 import MobileOperator from "./Home/MobileOperator";
 import FilterForm from "./Home/Filter";
 import AccountSetting from "./Profile/AccountSetting";
-import Logout from "./Profile/Logout";
 import ContactUs from "./Profile/ContactUs";
 import AboutUs from "./Profile/AboutUs";
 import TermAndConditions from "./Profile/TermAndConditions";
@@ -92,7 +91,6 @@ export {
   MobileOperator,
   FilterForm,
   AccountSetting,
-  Logout,
   ContactUs,
   AboutUs,
   TermAndConditions,

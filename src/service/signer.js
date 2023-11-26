@@ -101,7 +101,6 @@ const req_payload_hash = (body) => {
   const formDataToJson = function (f) {
     return Object.fromEntries(
       Array.from(f.keys(), (k) => {
-        console.log(typeof f.get(k));
         return k.endsWith("[]") ? [k.slice(0, -2), f.getAll(k)] : [k, f.get(k)];
       })
     );

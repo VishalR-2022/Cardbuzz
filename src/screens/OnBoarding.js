@@ -38,7 +38,7 @@ const OnBoarding = () => {
   }
   
   useEffect(() => {
-    redirect()
+    redirect();
   }, []);
 
   useEffect(() => {

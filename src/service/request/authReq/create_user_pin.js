@@ -46,7 +46,6 @@ const { encPayload, encKey, genX25519KeyPair } = require("../../utils");
 async function createUserPin({ country_code, phone }, access_token, pin) {
  const pubKeyPem_b64 = await genX25519KeyPair();
 
- console.log(pubKeyPem_b64, pin, access_token, '-----')
   let user = {
     country_code: country_code,
     phone: phone,

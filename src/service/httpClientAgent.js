@@ -46,6 +46,7 @@ httpClientAgent.interceptors.request.use((config) => {
 
 httpClientAgent.interceptors.response.use(
   (resp) => {
+    console.log(resp, '>>>>>>>>>>>>>>>>>>>> success');
     return resp;
   },
   async (error) => {

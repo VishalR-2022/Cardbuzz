@@ -4,8 +4,6 @@ import {
   verifySignupOTP,
   resendOTP,
   createUserPin,
-
-
   // delete after
   plainReqPost,
   plainReqGet,
@@ -30,7 +28,6 @@ export const postCreateUser = async (data) => {
 
 export const postResendOtp = async (data) => {
   const accessToken = await EncryptedStorage.getItem("access_token_login");
-  console.log(accessToken);
   const response = await resendOTP(data.userData, accessToken);
   if (response?.success === "OK") {
     return true;
@@ -41,7 +38,6 @@ export const postResendOtp = async (data) => {
 
 export const postVerifySignupOTP = async (data) => {
   const accessToken = await EncryptedStorage.getItem("access_token_login");
-  console.log(accessToken, data, '~~~~~~~~~');
   const response = await verifySignupOTP(data.userData, accessToken, data.OTP);
   if (response?.success === "OK") {
     await EncryptedStorage.setItem(
@@ -68,11 +64,8 @@ export const postCreateUserPin = async (data) => {
     );
     await genSharedSecret(response.data.ppk);
     return true;
-  }
-
-  else {
-    console.log(response, "errrrrr");
-    return response;
+  } else {
+    return false;
   }
 };
 
@@ -90,7 +83,13 @@ export const postResetPin = async (data) => {
   const refreshToken = await EncryptedStorage.getItem("jwt_refresh_token");
   const secretKey = await getSharedKeyDecoded();
 
-  const response = await resetPin(data.userData, secretKey, refreshToken, data.oldPin, data.newPin);
+  const response = await resetPin(
+    data.userData,
+    secretKey,
+    refreshToken,
+    data.oldPin,
+    data.newPin
+  );
   if (response?.success === "OK") {
     await EncryptedStorage.setItem(
       "jwt_access_token",
@@ -105,13 +104,18 @@ export const postResetPin = async (data) => {
 export const postVerifyPin = async (data) => {
   const intent = {
     action: "EDIT-USER-PROFILE",
-  }
+  };
   const refreshToken = await EncryptedStorage.getItem("jwt_refresh_token");
   const secretKey = await getSharedKeyDecoded();
 
-  const response = await verifyPin(data.userData, secretKey, refreshToken, data.pin, intent);
+  const response = await verifyPin(
+    data.userData,
+    secretKey,
+    refreshToken,
+    data.pin,
+    intent
+  );
   if (response?.status === "OK") {
-    console.log(response, 'verifyPin success');
     await EncryptedStorage.setItem(
       "jwt_access_token",
       response.data.access_token
@@ -125,7 +129,6 @@ export const postVerifyPin = async (data) => {
 export const postLoginViaPin = async (data) => {
   const response = await loginViaPin(data.userData, data.pin);
   if (response?.status === "OK") {
-    console.log(response, 'login success');
     await EncryptedStorage.setItem(
       "jwt_access_token",
       response.data.access_token
@@ -142,9 +145,16 @@ export const postLoginViaPin = async (data) => {
 
 // ---------------------- Logout ------------------------
 
-export const postLogout = async (data) => {
+export const postLogout = async () => {
   const secretKey = await getSharedKeyDecoded();
   const accessToken = await EncryptedStorage.getItem("jwt_access_token");
 
-  const response = logout(secretKey, accessToken);
-}
+  const response = await logout(secretKey, accessToken);
+  if (response?.success === "OK") {
+    await EncryptedStorage.setItem("jwt_access_token", null);
+    await EncryptedStorage.setItem("jwt_refresh_token", null);
+    return true;
+  } else {
+    return false;
+  }
+};

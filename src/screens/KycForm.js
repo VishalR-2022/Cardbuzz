@@ -43,10 +43,8 @@ const KycForm = () => {
         "Please grant camera roll permissions inside your system's settings"
       );
     } else {
-      console.log("Media Permissions are granted");
     }
   };
-  console.log(panUrl, "panUrl");
   useEffect(() => {
     checkForCameraRollPermission();
   }, []);
@@ -79,7 +77,6 @@ const KycForm = () => {
             quality: 1,
             cameraType: "front",
           });
-          console.log(JSON.stringify(_image));
           if (!_image.canceled) {
             dispatch(savePanImageUrl({ panCardUrl: _image.assets[0].uri }));
           }
@@ -124,7 +121,6 @@ const KycForm = () => {
             quality: 1,
             cameraType: "front",
           });
-          console.log(JSON.stringify(_image));
           if (!_image.canceled) {
             dispatch(
               saveAadharBackImageUrl({ aadharBackUrl: _image.assets[0].uri })
@@ -173,7 +169,6 @@ const KycForm = () => {
             quality: 1,
             cameraType: "front",
           });
-          console.log(JSON.stringify(_image));
           if (!_image.canceled) {
             dispatch(
               saveAadharFrontImageUrl({ aadharFrontUrl: _image.assets[0].uri })
@@ -196,7 +191,6 @@ const KycForm = () => {
   };
   const onSubmit = (data) => {
     // Add your submission logic here
-    console.log(data);
     navigation.navigate("KycSuccess");
   };
 

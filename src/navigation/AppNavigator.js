@@ -33,7 +33,6 @@ import {
   MobileOperator,
   FilterForm,
   AccountSetting,
-  Logout,
   ContactUs,
   AboutUs,
   TermAndConditions,
@@ -151,7 +150,6 @@ const AppNavigator = () => {
         component={EditFormOtpVerification}
       />
       <Stack.Screen name="AccountSetting" component={AccountSetting} />
-      <Stack.Screen name="Logout" component={Logout} />
       <Stack.Screen name="ContactUs" component={ContactUs} />
       <Stack.Screen name="AboutUs" component={AboutUs} />
       <Stack.Screen name="TermAndConditions" component={TermAndConditions} />

@@ -23,6 +23,7 @@ import {
   ResetPinTab,
 } from "../svg";
 import { ArrowButton } from "../components";
+import { postLogout } from "../hooks/useAuthApi";
 
 const CustomDrawer = (props) => {
   const navigation = useNavigation();
@@ -158,9 +159,12 @@ const CustomDrawer = (props) => {
               </TouchableOpacity>
               <View style={styles.verticalLine} />
               <TouchableOpacity
-                onPress={() => {
-                  setOpen(false);
-                  navigation.navigate("OnBoarding");
+                onPress={async () => {
+                  const response = await postLogout();
+                  if (response) {
+                    setOpen(false);
+                    navigation.navigate("OnBoarding");
+                  }
                 }}
               >
                 <Text

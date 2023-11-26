@@ -34,8 +34,6 @@ const PinLogin = () => {
       // const response = await postLoginViaPin({ userData, pin });
       //  const response = await postVerifyPin({userData, pin});
       // const response = await postResetPin({userData, oldPin: '1234', newPin: '1111'})
-      // const response = await postLogout();
-      // console.log(response, 'postLogin');
       // if (pin === password) {
         // navigation.navigate("AddDetails");
       //   setPin("");

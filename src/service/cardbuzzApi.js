@@ -120,7 +120,6 @@ export async function createUser({ country_code, phone }) {
   };
 
   const data = await encPayload(user);
-  console.log(data, "data");
   const key = await encKey(data.key);
 
   const payload = {
@@ -142,12 +141,74 @@ export async function createUser({ country_code, phone }) {
     let res = await httpClient(config);
     return res.data;
   } catch (e) {
-    console.log(e);
     e = !e;
   }
 }
 
 // ------------------------------- PIN APIs ---------------------------------
+// export async function createUserPin(
+//   { country_code, phone },
+//   access_token,
+//   pin,
+//   recreate_token = null
+// ) {
+//   const pubKeyPem_b64 = await genX25519KeyPair();
+
+//   let user = {
+//     country_code: country_code,
+//     phone: phone,
+//     device_id: DEVICE_ID,
+//     pin: pin,
+//     pub_key: pubKeyPem_b64,
+//   };
+
+//   const data = await encPayload(user);
+
+//   const key = await encKey(data.key);
+
+//   const payload = {
+//     body: data.cipherText,
+//     token: key,
+//   };
+
+//   // send to sever
+//   const config = {
+//     method: "post",
+//     url: null,
+//     params: {},
+//     // body: null,
+//     data: payload,
+//     signerSecretKey: data.key,
+//     headers: {
+//       // Authorization: `Bearer ${access_token}`,
+//     },
+//   };
+
+//   if (
+//     typeof access_token !== "undefined" &&
+//     access_token !== null &&
+//     access_token.length > 0
+//   ) {
+//     config.url = `/pin/create`;
+//     config.headers["Authorization"] = `Bearer ${access_token}`;
+//   } else if (
+//     typeof recreate_token !== "undefined" &&
+//     recreate_token !== null &&
+//     recreate_token.length > 0
+//   ) {
+//     config.url = `/pin/recreate/${recreate_token}`;
+//   }
+
+//   try {
+//     let res = await httpClient(config);
+//     console.log(res.data);
+//   } catch (e) {
+//     e = !e; // HANDLE error
+//     return;
+//   }
+// }
+
+
 export async function createUserPin(
   { country_code, phone },
   access_token,
@@ -184,12 +245,10 @@ export async function createUserPin(
     },
   };
 
-  let res;
   try {
-    res = await httpClient(config);
-    if(res?.code) {
-      console.log(res, 'only err')
-    }
+    let res = await httpClient(config);
+    // if(res?.code) {
+    // }
     return res.data;
   } catch (e) {
     return e;
@@ -259,7 +318,6 @@ export async function verifyPin(
   const payload = {
     body: data.cipherText,
   };
-  console.log(payload);
 
   // send to sever
   const config = {
@@ -276,7 +334,6 @@ export async function verifyPin(
 
   try {
     let res = await httpClient(config);
-    console.log(res.data);
     return res.data;
   } catch (e) {
     e = !e; // HANDLE error
@@ -299,7 +356,6 @@ export async function loginViaPin({ country_code, phone }, pin) {
     body: data.cipherText,
     token: key,
   };
-  // console.log(payload);
 
   // send to sever
   const config = {
@@ -336,7 +392,7 @@ export async function logout(secretKey, access_token) {
 
   try {
     let res = await httpClient(config);
-    console.log(res.data);
+    return res.data;
   } catch (e) {
     e = !e; // HANDLE error
   }

@@ -6,6 +6,7 @@ import { AndroidSafeArea, COLORS } from "../constants/theme";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import { postCreateUserPin } from "../hooks/useAuthApi";
+import { loadServerPubKey } from "../service/utils";
 
 const CreatePin = ({ route }) => {
   const navigation = useNavigation();
@@ -21,6 +22,10 @@ const CreatePin = ({ route }) => {
       setReset(route.params.reset);
     }
   }, [route.params]);
+
+  useEffect(() => {
+    loadServerPubKey();
+  }, []);
 
   const handlePinComplete = (code) => {
     setPin(code);
@@ -38,7 +43,6 @@ const CreatePin = ({ route }) => {
           country_code: "91",
           phone: phoneNumber,
         };
-
         const response = await postCreateUserPin({ userData, pin });
         if (response) {
           setPin("");

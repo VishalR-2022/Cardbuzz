@@ -46,11 +46,12 @@ httpClient.interceptors.request.use((config) => {
 
 httpClient.interceptors.response.use(
   (resp) => {
+    console.log(resp, 'resp')
     return resp;
   },
   async (error) => {
     const err = error.response;
-    console.log(err);
+    console.log(error, 'error: https');
     if (err?.code == 20010) {
       // 401
     }

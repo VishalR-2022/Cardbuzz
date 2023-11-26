@@ -44,10 +44,8 @@ const { encPayload, encKey } = require("../../utils");
 
 //   try {
 //     let res = await httpClientAgent(config);
-//     console.log(res.data);
 //   } catch (e) {
 //     e = !e; // do nothing with the error
-//     console.log({ status: "FAIL" });
 //   }
 
 //   return;
@@ -66,7 +64,7 @@ async function reqGet(key, access_token) {
 
   try {
     let res = await httpClientAgent(config);
-    console.log(res.data);
+    return res.data;
   } catch (e) {
     e = !e; // do nothing with the error
   }
@@ -87,7 +85,7 @@ async function reqGetQR(key, access_token) {
 
   try {
     let res = await httpClientAgent(config);
-    console.log(res.data);
+    return res.data;
   } catch (e) {
     e = !e; // do nothing with the error
   }
@@ -95,31 +93,12 @@ async function reqGetQR(key, access_token) {
   return;
 }
 
-async function reqPost(key, access_token) {
+async function reqPost(key, access_token, userData) {
   /**
    * {"partnerReferenceNo":"CARDBUZZ12345","actionName":"ADD_PARTNER_SELLER",
    * "partnerKey":"XXXXXX","p1":"Barber Shop","p2":"Mr Rahul S","p3":"ABC123","p4":"XXXXXXX","p5":"XXXXXXXXX","p6":"1520","p7":"SMALL","p8":"OFFLINE","p9":"PROPRIETARY","p10":"Belgaum","p11":"Belgaum","p12":"29","p13":"591244","p14":"","p15":null,"p16":"000590100021000","p17":"HDFC0000001","p18":"20.23","p19":"70.22","p20":"Kalina","p21":"Santacruz East","p22":"","p23":"","p24":"","p25":"","p26":"19\/11\/1995","p27":"19\/11\/2006","p28":""}
    */
-  const p = {
-    name: "Mr X Delhi",
-    bank_acc_number: "000598120089705",
-    bank_acc_ifsc: "HDFC0000001",
-    business_name: "Kabari Shop",
-    turnover: 2000000,
-    ownership_type: "PROPRIETARY",
-    city: "Belgaum",
-    district: "Belgaum",
-    state: "Maharashtra",
-    pincode: "591244",
-    latitude: "25",
-    longitude: "76",
-    address1: "My Address 11",
-    address2: "My address 22",
-    dob: (str = "01\/01\/1981"),
-  };
-
-  const data = await encPayload(p);
-  console.log(data)
+  const data = await encPayload(userData);
   const payload = {
     body: data.cipherText,
   };
@@ -138,8 +117,7 @@ async function reqPost(key, access_token) {
 
   try {
     let res = await httpClientAgent(config);
-    console.log(res.data);
-    return res.data
+    return res.data;
   } catch (e) {
     e = !e; // do nothing with the error
   }
@@ -173,7 +151,7 @@ async function reqPutKyc(key, access_token) {
 
   try {
     let res = await httpClientAgent(config);
-    console.log(res.data);
+    return res.data;
   } catch (e) {
     e = !e; // do nothing with the error
     console.log({ status: "FAIL" });

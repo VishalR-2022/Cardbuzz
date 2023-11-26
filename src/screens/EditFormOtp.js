@@ -19,13 +19,10 @@ const EditFormOtpVerification = () => {
   const [pin, setPin] = useState("");
 
   const handleOTPComplete = (otp) => {
-    console.log("Entered OTP:", otp);
     if (otp === OTP) {
-      console.log("OTP is valid!");
       setLogin(true);
       // Implement OTP validation logic here
     } else {
-      console.log("Invalid OTP!");
       // Handle invalid OTP
     }
   };
@@ -35,7 +32,6 @@ const EditFormOtpVerification = () => {
       setLogin(false);
       navigation.navigate("EditFormSuccess");
     }
-    console.log("Invalid OTP!");
   };
 
   function renderTop() {

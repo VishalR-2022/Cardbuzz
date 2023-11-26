@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, SafeAreaView, Image } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Button from "./../components/Button";
@@ -6,7 +6,7 @@ import RoundIconButton from "./../components/RoundIconButton";
 import MobileRecharge from "../svg/MobileRechargeSvg";
 import { useNavigation } from "@react-navigation/native";
 import { AndroidSafeArea, COLORS } from "../constants/theme";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import {
   Notification,
@@ -20,10 +20,43 @@ import {
 } from "../svg";
 import { Shadow } from "react-native-shadow-2";
 import Burger from "./../svg/Burger";
+import { getUserProfile } from "../hooks/useAgentApi";
+import { setUserDetails } from "../store/slice/userSlice";
+import { loadServerPubKey } from "../service/utils";
 
 const Home = () => {
   const navigation = useNavigation();
   const image = useSelector((state) => state.auth.imageUrl);
+  const userName = useSelector((state) => state.user);
+  const [userData, setUserData] = useState(null);
+  const dispatch = useDispatch();
+
+  console.log(userData, ">>>>>>>>>>>>>>>> name", userName);
+  const getUserInfo = async () => {
+    let data = {};
+    await loadServerPubKey();
+    const response = await getUserProfile();
+    console.log(response, ">>>>>>>>>>>>>>>>>>>> datattatatdtatdta");
+    if (response.data) {
+      data = {
+        ...response.data,
+        name: data.fullName,
+        bank_acc_number: data.accountNumberCheck,
+        bank_acc_ifsc: data.ifscCode,
+        pincode: data.pinCode,
+        address1: data.address,
+        bank_name: data.bankName,
+      };
+      dispatch(setUserDetails(data));
+    }
+  };
+  useEffect(() => {
+    setUserData(userName);
+  }, [userName]);
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
 
   const QrViewButton = () => {
     return (
@@ -79,7 +112,7 @@ const Home = () => {
           <View
             style={{ marginLeft: 20, flex: 1, justifyContent: "flex-start" }}
           >
-            <Text style={styles.userName}>Amit Thakur</Text>
+            <Text style={styles.userName}>{userName.name}</Text>
             <Text style={styles.welcomeText}>Welcome Back,</Text>
           </View>
           <TouchableOpacity
@@ -143,31 +176,6 @@ const Home = () => {
             <Text style={styles.walletAmount}>₹4,524.00</Text>
           </View>
         </Shadow>
-        {/* <View style={styles.sectionContainer}>
-          <View style={styles.section}>
-            <View style={styles.qrCodeTextContainer}>
-              <Text style={styles.qrCodeLabel}>QR Code for</Text>
-              <Text style={styles.qrCodeAction}>Cash{"\n"}Withdrawal</Text>
-            </View>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("QrCashWithDrawal")}
-            >
-              <QrViewButton />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.verticalLine} />
-          <View style={{}}>
-            <View style={styles.qrCodeTextContainer}>
-              <Text style={styles.qrCodeLabel}>QR Code for</Text>
-              <Text style={styles.qrCodeAction}>Goods{"\n"}and Services</Text>
-            </View>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("QrGoodAndService")}
-            >
-              <QrViewButton />
-            </TouchableOpacity>
-          </View>
-        </View> */}
       </View>
     );
   }
@@ -238,7 +246,6 @@ const Home = () => {
                   Svg={button.svg}
                   text={button.label}
                   onPress={() => {
-                    console.log("Button pressed", button.navigate);
                     if (button.navigate) {
                       navigation.navigate(button.navigate);
                     }
