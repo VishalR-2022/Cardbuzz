@@ -5,21 +5,33 @@ import {
   StyleSheet,
   SafeAreaView,
   TextInput,
+  NativeModules
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AndroidSafeArea, COLORS } from "../../constants/theme";
 import { Button, BackButton } from "../../components";
 import { useNavigation } from "@react-navigation/native";
 
+const { UPI } = NativeModules;
+
 const WalletPayment = () => {
   const navigation = useNavigation();
   const [amount, setAmount] = useState("");
 
-  function handleProceedToPay() {
-    // Handle the logic for proceeding to pay
-    // For example, you can navigate to the payment screen with the amount
+  const handleProceedToPay = async() => {
     if (amount !== "") {
-      console.log("Proceed to pay with amount:", amount);
+      let UpiUrl = "upi://pay?pa=9922627157@paytm&pn=%20&tr=%20&am="+amount+"&cu=INR";
+      let response = await UPI.openLink(UpiUrl);
+
+      if(response) {
+       if( response.includes('Success')) {
+         navigation.navigate("PopUpSuccessWalletMoney");
+       }
+       else if (response.includes('Failed')) {
+        navigation.navigate("PopUpWarningWalletMoney");
+       }
+      }
+
     }
   }
 
@@ -59,9 +71,7 @@ const WalletPayment = () => {
           disable={amount === ""}
           text="Proceed"
           width={"100%"}
-          onPress={() => {
-            navigation.navigate("PopUpSuccessWalletMoney");
-          }}
+          onPress={handleProceedToPay}
         />
       </View>
     </SafeAreaView>

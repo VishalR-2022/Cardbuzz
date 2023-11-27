@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.xcrypto.XCryptoModule;
+import com.xupi.UPIModule;
 
 public class MyAppPackage implements ReactPackage {
 
@@ -24,6 +25,7 @@ public class MyAppPackage implements ReactPackage {
     List<NativeModule> modules = new ArrayList<>();
 
     modules.add(new XCryptoModule(reactContext));
+    modules.add(new UPIModule(reactContext));
 
     return modules;
   }
