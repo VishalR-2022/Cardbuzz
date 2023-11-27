@@ -32,31 +32,31 @@ const Home = () => {
   const dispatch = useDispatch();
 
   console.log(userData, ">>>>>>>>>>>>>>>> name", userName);
-  const getUserInfo = async () => {
-    let data = {};
-    await loadServerPubKey();
-    const response = await getUserProfile();
-    console.log(response, ">>>>>>>>>>>>>>>>>>>> datattatatdtatdta");
-    if (response.data) {
-      data = {
-        ...response.data,
-        name: data.fullName,
-        bank_acc_number: data.accountNumberCheck,
-        bank_acc_ifsc: data.ifscCode,
-        pincode: data.pinCode,
-        address1: data.address,
-        bank_name: data.bankName,
-      };
-      dispatch(setUserDetails(data));
-    }
-  };
-  useEffect(() => {
-    setUserData(userName);
-  }, [userName]);
+  // const getUserInfo = async () => {
+  //   let data = {};
+  //   await loadServerPubKey();
+  //   const response = await getUserProfile();
+  //   console.log(response, ">>>>>>>>>>>>>>>>>>>> datattatatdtatdta");
+  //   if (response.data) {
+  //     data = {
+  //       ...response.data,
+  //       name: data.fullName,
+  //       bank_acc_number: data.accountNumberCheck,
+  //       bank_acc_ifsc: data.ifscCode,
+  //       pincode: data.pinCode,
+  //       address1: data.address,
+  //       bank_name: data.bankName,
+  //     };
+  //     dispatch(setUserDetails(data));
+  //   }
+  // };
+  // useEffect(() => {
+  //   setUserData(userName);
+  // }, [userName]);
 
-  useEffect(() => {
-    getUserInfo();
-  }, []);
+  // useEffect(() => {
+  //   getUserInfo();
+  // }, []);
 
   const QrViewButton = () => {
     return (
@@ -112,7 +112,7 @@ const Home = () => {
           <View
             style={{ marginLeft: 20, flex: 1, justifyContent: "flex-start" }}
           >
-            <Text style={styles.userName}>{userName.name}</Text>
+            <Text style={styles.userName}>Amit Thakur</Text>
             <Text style={styles.welcomeText}>Welcome Back,</Text>
           </View>
           <TouchableOpacity
