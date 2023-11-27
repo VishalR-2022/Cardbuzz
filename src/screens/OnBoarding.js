@@ -16,6 +16,7 @@ import { login, setAccessToken } from "../store/slice/authSlice";
 import { createUser } from "../service/cardbuzzApi";
 import { postCreateUser } from "../hooks/useAuthApi";
 import {NativeModules} from 'react-native';
+import uuid from 'react-native-uuid';
 
 const { UPI } = NativeModules;
 
@@ -34,7 +35,7 @@ const OnBoarding = () => {
 
   const handleSubmit = async () => {
     const amount = 1;
-    let UpiUrl = "upi://pay?pa=9922627157@paytm&pn=%20&tr=%20&am="+amount+"&cu=INR";
+    let UpiUrl = "upi://pay?pa=q753399778@ybl&pn=Shri Niwas Medical&tr=332972873862&am=" + amount + ".00" + "&cu=INR";
     let response = await UPI.openLink(UpiUrl);
 
     console.log(response);
