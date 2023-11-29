@@ -25,10 +25,14 @@ const WalletPayment = () => {
 
       if(response) {
        if( response.includes('Success')) {
-         navigation.navigate("PopUpSuccessWalletMoney");
+         navigation.navigate("PopUpSuccessWalletMoney", {
+          amount: amount
+        });
        }
        else if (response.includes('Failed')) {
-        navigation.navigate("PopUpWarningWalletMoney");
+        navigation.navigate("PopUpWarningWalletMoney", {
+          amount: amount
+        });
        }
       }
 

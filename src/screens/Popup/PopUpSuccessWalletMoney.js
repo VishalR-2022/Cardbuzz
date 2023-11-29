@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { PopUp } from "../../components";
 
-const PopUpSuccessWalletMoney = () => {
+const PopUpSuccessWalletMoney = ({ route }) => {
   const navigation = useNavigation();
 
   return (
@@ -11,7 +11,7 @@ const PopUpSuccessWalletMoney = () => {
       title="Yey!"
       para="Money has been added to your wallet successfully"
       rechargeText="Amount Added"
-      rechargeAmount="₹200"
+      rechargeAmount={`₹${route.params.amount}`}
       buttontext="Done"
       onPress={() => navigation.navigate("PopUpWarningWalletMoney")}
     />
