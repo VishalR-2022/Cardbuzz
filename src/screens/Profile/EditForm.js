@@ -7,6 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
 import { setUserDetails } from "../../store/slice/userSlice";
+import { putUserProfile } from "../../hooks/useAgentApi";
 
 const EditProfile = () => {
   const navigation = useNavigation();
@@ -21,10 +22,19 @@ const EditProfile = () => {
     getValues,
   } = useForm();
 
-  const onSubmit = (data) => {
-    if (data.accountNumber === data.accountNumberCheck) {
-      dispatch(setUserDetails(data));
-      navigation.navigate("EditFormOtpVerification");
+  const onSubmit = async (bankDetails) => {
+    if (bankDetails.accountNumber === bankDetails.accountNumberCheck) {
+      console.log(bankDetails, '>>>>>>>>>>>>>>>>>>>>> data');
+      const payload = {
+        agent_auth_id: data.agent_auth_id,
+        bank_acc_ifsc: bankDetails.ifscCode,
+        bank_acc_number: bankDetails.accountNumber,
+      }
+      const response = await putUserProfile(payload);
+      if(response) {
+        dispatch(setUserDetails({ ...data, ...bankDetails }));
+        // navigation.navigate("EditFormOtpVerification");
+      }
     }
   };
 
@@ -53,12 +63,14 @@ const EditProfile = () => {
           control={control}
           name="fullName"
           defaultValue=""
-          rules={{ required: "Full Name is required" }}
+          nullable
           render={({ field }) => (
             <TextField
               value={field.value}
               onChangeText={field.onChange}
               placeholder="Full Name"
+              editable={false}
+              selectTextOnFocus={false}
             />
           )}
         />
@@ -69,13 +81,15 @@ const EditProfile = () => {
           control={control}
           name="pinCode"
           defaultValue=""
-          rules={{ required: "Pin Code is required" }}
+          nullable
           render={({ field }) => (
             <TextField
               value={field.value}
               onChangeText={field.onChange}
               placeholder="Pin Code"
               keyboardType="numeric"
+              editable={false}
+              selectTextOnFocus={false}
             />
           )}
         />
@@ -87,12 +101,14 @@ const EditProfile = () => {
             control={control}
             name="address"
             defaultValue=""
-            rules={{ required: "Address is required" }}
+            nullable
             render={({ field }) => (
               <TextField
                 value={field.value}
                 onChangeText={field.onChange}
                 placeholder="Address"
+                editable={false}
+                selectTextOnFocus={false}
               />
             )}
           />
@@ -132,7 +148,17 @@ const EditProfile = () => {
           control={control}
           name="accountNumber"
           defaultValue=""
-          rules={{ required: "Account number is required" }}
+          rules={{
+            required: "Account Number is required",
+            minLength: {
+              value: 12,
+              message: "Account Number must be 12 digits",
+            },
+            maxLength: {
+              value: 12,
+              message: "Account Number must be 12 digits",
+            },
+          }}
           render={({ field }) => (
             <TextField
               value={field.value}
@@ -150,7 +176,15 @@ const EditProfile = () => {
           name="accountNumberCheck"
           defaultValue=""
           rules={{
-            required: "Account number is required",
+            required: "Account Number is required",
+            minLength: {
+              value: 12,
+              message: "Account Number must be 12 digits",
+            },
+            maxLength: {
+              value: 12,
+              message: "Account Number must be 12 digits",
+            },
             validate: (value) =>
               value === "" || value === getValues("accountNumber")
                 ? true
@@ -174,12 +208,18 @@ const EditProfile = () => {
           control={control}
           name="ifscCode"
           defaultValue=""
-          rules={{ required: "IFSC code is required" }}
+          rules={{
+            required: "IFSC Code is required",
+            pattern: {
+              value: /^[A-Za-z]{4}\d{7}$/,
+              message: "Invalid IFSC Code",
+            },
+          }}
           render={({ field }) => (
             <TextField
               value={field.value}
               onChangeText={field.onChange}
-              placeholder="IFSC code"
+              placeholder="IFSC Code"
             />
           )}
         />

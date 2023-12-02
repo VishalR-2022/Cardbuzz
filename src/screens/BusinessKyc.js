@@ -6,25 +6,26 @@ import { COLORS } from "../constants/theme";
 import { useNavigation } from "@react-navigation/native";
 import BackButton from "../components/BackButton";
 import { useForm, Controller } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { setUserDetails } from "../store/slice/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { postUserProfile } from "../hooks/useAgentApi";
 
-const AddDetails = () => {
+const BusinessKyc = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-
+  const userDetails = useSelector(state => state.user);
   const {
     handleSubmit,
     control,
     formState: { errors },
-    getValues,
   } = useForm();
 
   const onSubmit = async (data) => {
-    if (data.accountNumber === data.accountNumberCheck) {
-      dispatch(setUserDetails(data));
-      navigation.navigate("UploadPicture");
-    }
+    const userData = {...data, ...userDetails}
+      const response = await postUserProfile(userData);
+      if (response) {
+        console.log(response, '>>>>>>>>>>>>>>>> kyc update')
+        navigation.navigate("KycSuccess");
+      }
   };
 
   return (
@@ -38,87 +39,66 @@ const AddDetails = () => {
       >
         <BackButton />
         <View style={styles.formContainer}>
-          <Text style={styles.contentTitle}>Add Details</Text>
+          <Text style={styles.contentTitle}>Business KYC</Text>
           <View>
             <Controller
               control={control}
-              name="fullName"
+              name="businessName"
               defaultValue=""
-              rules={{ required: "Full Name is required" }}
+              rules={{ required: "Business Name is required" }}
               render={({ field }) => (
                 <TextField
                   value={field.value}
                   onChangeText={field.onChange}
-                  placeholder="Name as per Bank Account"
+                  placeholder="Business Name"
                 />
               )}
             />
-            {errors.fullName && (
-              <Text style={styles.errorText}>{errors.fullName.message}</Text>
+            {errors.businessName && (
+              <Text style={styles.errorText}>
+                {errors.businessName.message}
+              </Text>
             )}
             <Controller
               control={control}
-              name="state"
+              name="turnover"
               defaultValue=""
               nullable
               render={({ field }) => (
                 <TextField
                   value={field.value}
                   onChangeText={field.onChange}
-                  placeholder="State"
-                />
-              )}
-            />
-            <Controller
-              control={control}
-              name="pinCode"
-              defaultValue=""
-              rules={{
-                required: "Pin Code is required",
-                minLength: {
-                  value: 6,
-                  message: "Pin Code must be 6 digits",
-                },
-                maxLength: {
-                  value: 6,
-                  message: "Pin Code must be 6 digits",
-                },
-              }}
-              render={({ field }) => (
-                <TextField
-                  value={field.value}
-                  onChangeText={field.onChange}
-                  placeholder="Pin Code"
+                  placeholder="Turnover"
                   keyboardType="numeric"
                 />
               )}
             />
-            {errors.pinCode && (
-              <Text style={styles.errorText}>{errors.pinCode.message}</Text>
+            {errors.turnover && (
+              <Text style={styles.errorText}>{errors.turnover.message}</Text>
             )}
             <Controller
               control={control}
-              name="address1"
+              name="ownershipType"
               defaultValue=""
               nullable
               render={({ field }) => (
                 <TextField
                   value={field.value}
                   onChangeText={field.onChange}
-                  placeholder="Address Line 1"
+                  placeholder="Ownership Type"
                 />
               )}
             />
             <Controller
               control={control}
-              name="address2"
+              name="dob"
               defaultValue=""
               nullable
               render={({ field }) => (
                 <TextField
                   value={field.value}
                   onChangeText={field.onChange}
-                  placeholder="Address Line 2"
+                  placeholder="DOB"
                 />
               )}
             />
@@ -127,92 +107,62 @@ const AddDetails = () => {
             </View>
             <Controller
               control={control}
-              name="accountNumber"
+              name="pan"
               defaultValue=""
               rules={{
-                required: "Account Number is required",
-                minLength: {
-                  value: 12,
-                  message: "Account Number must be 12 digits",
-                },
-                maxLength: {
-                  value: 12,
-                  message: "Account Number must be 12 digits",
-                },
-              }}
-              render={({ field }) => (
-                <TextField
-                  value={field.value}
-                  onChangeText={field.onChange}
-                  placeholder="Account Number"
-                  keyboardType="numeric"
-                />
-              )}
-            />
-            {errors.accountNumber && (
-              <Text style={styles.errorText}>
-                {errors.accountNumber.message}
-              </Text>
-            )}
-            <Controller
-              control={control}
-              name="accountNumberCheck"
-              defaultValue=""
-              rules={{
-                required: "Account Number is required",
-                minLength: {
-                  value: 12,
-                  message: "Account Number must be 12 digits",
-                },
-                maxLength: {
-                  value: 12,
-                  message: "Account Number must be 12 digits",
-                },
-                validate: (value) =>
-                  value === "" || value === getValues("accountNumber")
-                    ? true
-                    : "Account numbers do not match",
-              }}
-              render={({ field }) => (
-                <TextField
-                  value={field.value}
-                  onChangeText={field.onChange}
-                  placeholder="Verify Account Number"
-                  keyboardType="numeric"
-                />
-              )}
-            />
-            {errors.accountNumberCheck && (
-              <Text style={styles.errorText}>
-                {errors.accountNumberCheck.message}
-              </Text>
-            )}
-            <Controller
-              control={control}
-              name="ifscCode"
-              defaultValue=""
-              rules={{
-                required: "IFSC Code is required",
+                required: "PAN Number is required",
                 pattern: {
-                  value: /^[A-Za-z]{4}\d{7}$/,
-                  message: "Invalid IFSC Code",
+                  value: /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/,
+                  message: "Invalid PAN Number format",
                 },
               }}
               render={({ field }) => (
                 <TextField
                   value={field.value}
                   onChangeText={field.onChange}
-                  placeholder="IFSC Code"
+                  placeholder="PAN Number"
+                  defaultValue="ABCDE0000A"
                 />
               )}
             />
-            {errors.ifscCode && (
-              <Text style={styles.errorText}>{errors.ifscCode.message}</Text>
+            {errors.pan && (
+              <Text style={styles.errorText}>{errors.pan.message}</Text>
+            )}
+            <View style={{ marginTop: 12 }}>
+              <Divider />
+            </View>
+            <Controller
+              control={control}
+              name="aadhar"
+              rules={{
+                required: "Aadhar Number is required",
+                minLength: {
+                  value: 12,
+                  message: "Aadhar Number must be 12 digits",
+                },
+                maxLength: {
+                  value: 12,
+                  message: "Aadhar Number must be 12 digits",
+                },
+              }}
+              render={({ field }) => (
+                <TextField
+                  value={field.value}
+                  onChangeText={field.onChange}
+                  placeholder="Aadhar Number"
+                  maxLength={12}
+                  keyboardType="numeric"
+                  defaultValue="0000 0000 0000"
+                />
+              )}
+            />
+            {errors.aadhar && (
+              <Text style={styles.errorText}>{errors.aadhar.message}</Text>
             )}
           </View>
           <View style={{ marginTop: 30 }}>
             <Button
-              text="Next"
+              text="Submit"
               onPress={handleSubmit(onSubmit)}
               width={"100%"}
             />
@@ -245,4 +195,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddDetails;
+export default BusinessKyc;

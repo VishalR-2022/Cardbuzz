@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isLoggedIn: false,
-  mobileNumber: null,
   imageUrl: null,
   pin: null,
   accessToken: null,
@@ -14,11 +13,9 @@ const authSlice = createSlice({
   reducers: {
     login: (state, action) => {
       state.isLoggedIn = true;
-      state.mobileNumber = action.payload.mobileNumber; // Save mobile number to state
     },
     logout: (state) => {
       state.isLoggedIn = false;
-      state.mobileNumber = null; // Reset mobile number on logout
     },
     saveImageUrl: (state, action) => {
       state.imageUrl = action.payload.imageUrl;

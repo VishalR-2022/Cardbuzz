@@ -1,121 +1,15 @@
-import { DEVICE_ID, PUBLIC_KEY } from "./constant";
+import { DEVICE_ID } from "../constants/DeviceInfo";
+import { PUBLIC_KEY } from "./constant";
 import { httpClient } from "./httpClient";
+
 import { encPayload, encKey, genX25519KeyPair, getSharedKeyDecoded } from "./utils";
-
-// ------------------------------- DUMMY -------------------------------------
-export async function plainReqGet(key, access_token) {
-  const config = {
-    method: "get",
-    url: `/dummy/dummy1`,
-    params: {
-      b: "c",
-      a: [2, 1],
-    },
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-    signerSecretKey: key,
-  };
-
-  try {
-    let res = await httpClient(config);
-    console.log(res.data);
-  } catch (e) {
-    e = !e; // HANDLE error
-  }
-
-  return;
-}
-export async function plainReqPost(key, access_token) {
-  let body = { website: "payline.in" };
-
-  const config = {
-    method: "post",
-    url: `/dummy/dummy1`,
-    params: {
-      b: "c",
-      a: [1, 2],
-    },
-    // body: null,
-    data: body,
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-    signerSecretKey: key,
-  };
-
-  try {
-    let res = await httpClient(config);
-    console.log(res.data);
-  } catch (e) {
-    e = !e; // HANDLE error
-  }
-
-  return;
-}
-export async function encReqGet(key, access_token) {
-  const config = {
-    method: "get",
-    url: `/dummy/dummy1/enc`,
-    params: {
-      b: "c",
-      a: [2, 1],
-    },
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-    signerSecretKey: key,
-  };
-
-  try {
-    let res = await httpClient(config);
-    console.log(res.data);
-  } catch (e) {
-    e = !e; // HANDLE error
-  }
-
-  return;
-}
-export async function encReqPost(key, access_token) {
-  let body = { website: "payline.in", ping: "pong" };
-
-  const data = await encPayload(body);
-  const payload = {
-    body: data.cipherText,
-  };
-
-  const config = {
-    method: "post",
-    url: `/dummy/dummy1/enc`,
-    params: {
-      b: "c",
-      a: [1, 2],
-    },
-    // body: null,
-    data: payload,
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-    signerSecretKey: key,
-  };
-
-  try {
-    let res = await httpClient(config);
-    console.log(res.data);
-  } catch (e) {
-    e = !e; // HANDLE error
-  }
-
-  return;
-}
-
 //----------------------------- CREATE USER ----------------------------
 
 export async function createUser({ country_code, phone }) {
   const user = {
     country_code: country_code,
     phone: phone,
-    device_id: DEVICE_ID,
+    device_id: await DEVICE_ID(),
     fcm_reg_token: "xxx2x-yyyyy",
   };
 
@@ -127,12 +21,10 @@ export async function createUser({ country_code, phone }) {
     token: key,
   };
 
-  // send to sever
   const config = {
     method: "post",
     url: `/user`,
     params: {},
-    // body: null,
     data: payload,
     signerSecretKey: data.key,
   };
@@ -157,7 +49,7 @@ export async function createUser({ country_code, phone }) {
 //   let user = {
 //     country_code: country_code,
 //     phone: phone,
-//     device_id: DEVICE_ID,
+//     device_id: await DEVICE_ID(),
 //     pin: pin,
 //     pub_key: pubKeyPem_b64,
 //   };
@@ -218,7 +110,7 @@ export async function createUserPin(
   let user = {
     country_code: country_code,
     phone: phone,
-    device_id: DEVICE_ID,
+    device_id: await DEVICE_ID(),
     pin: pin,
     pub_key: pubKeyPem_b64,
   };
@@ -265,7 +157,7 @@ export async function resetPin(
   let user = {
     country_code: country_code,
     phone: phone,
-    device_id: DEVICE_ID,
+    device_id: await DEVICE_ID(),
     pin: old_pin,
     new_pin: new_pin,
     // ts: new Date().toISOString(),
@@ -307,7 +199,7 @@ export async function verifyPin(
   let user = {
     country_code: country_code,
     phone: phone,
-    device_id: DEVICE_ID,
+    device_id: await DEVICE_ID(),
     pin: pin,
     // intent_req_token: intent.token,
     intent_req_action: intent.action,
@@ -344,7 +236,7 @@ export async function loginViaPin({ country_code, phone }, pin) {
   let user = {
     country_code: country_code,
     phone: phone,
-    device_id: DEVICE_ID,
+    device_id: await DEVICE_ID(),
     pin: pin,
   };
   const data = await encPayload(user);
@@ -408,7 +300,7 @@ async function sendAnyOtherOTP(
   let user = {
     country_code: country_code,
     phone: phone,
-    device_id: DEVICE_ID,
+    device_id: await DEVICE_ID(),
     intent_req_action: intent.action,
     // ts: new Date().toISOString(),
   };
@@ -448,7 +340,7 @@ export async function verifySignupOTP(
   let user = {
     country_code: country_code,
     phone: phone,
-    device_id: DEVICE_ID,
+    device_id: await DEVICE_ID(),
     otp: otp,
     // fcm_reg_token: "xxx2x-yyyyy",
   };
@@ -488,7 +380,7 @@ export async function resendOTP({ country_code, phone }, access_token) {
   let user = {
     country_code: country_code,
     phone: phone,
-    device_id: DEVICE_ID,
+    device_id: await DEVICE_ID(),
     // ts: new Date().toISOString(),
   };
   const data = await encPayload(user);

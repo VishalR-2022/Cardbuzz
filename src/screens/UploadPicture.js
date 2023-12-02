@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Text, StyleSheet, SafeAreaView, View, Image } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { TextField, Button, Divider } from "../components";
+import { Button } from "../components";
 import { AndroidSafeArea, COLORS } from "../constants/theme";
 import { useNavigation } from "@react-navigation/native";
 import BackButton from "../components/BackButton";
 import * as ImagePicker from "expo-image-picker";
 import { useSelector, useDispatch } from "react-redux";
 import { saveImageUrl } from "../store/slice/authSlice";
+import { postUserProfilePhoto } from "../hooks/useAgentApi";
 
 const UploadPicture = () => {
   const navigation = useNavigation();
@@ -37,7 +38,7 @@ const UploadPicture = () => {
     });
     console.log(JSON.stringify(_image));
     if (!_image.canceled) {
-      dispatch(saveImageUrl({ imageUrl: _image.assets[0].uri }));
+      dispatch(saveImageUrl({ imageUrl: _image.assets[0] }));
     }
   };
 
@@ -50,13 +51,16 @@ const UploadPicture = () => {
     });
     console.log(JSON.stringify(_image));
     if (!_image.canceled) {
-      dispatch(saveImageUrl({ imageUrl: _image.assets[0].uri }));
+      dispatch(saveImageUrl({ imageUrl: _image.assets[0] }));
     }
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (image !== null) {
-      navigation.navigate("KycForm");
+      const response = await postUserProfilePhoto(image)
+      console.log(response, '>>>>>>>>>>>>>>>>>>>> image');
+
+      // navigation.navigate("BusinessKyc");
     }
   };
 
@@ -79,7 +83,7 @@ const UploadPicture = () => {
           <View style={styles.uploadContainer}>
             {image && (
               <Image
-                source={{ uri: image }}
+                source={{ uri: image.uri }}
                 style={{ width: 120, height: 120 }}
               />
             )}

@@ -57,7 +57,7 @@ const CustomDrawer = (props) => {
           <View style={styles.uploadContainer}>
             {image && (
               <Image
-                source={{ uri: image }}
+                source={{ uri: image.uri }}
                 style={{ width: 40, height: 40 }}
               />
             )}

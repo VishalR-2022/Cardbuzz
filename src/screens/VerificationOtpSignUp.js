@@ -15,17 +15,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { resendOTP, verifySignupOTP } from "../service/request/authReq/create_user";
 import { setAccessToken } from "../store/slice/authSlice";
 import { postResendOtp, postVerifySignupOTP } from "../hooks/useAuthApi";
+import { MOBILE_NO } from "../constants/DeviceInfo";
 
 const VerificationOtpSignUp = () => {
   const OTP = "117123"; // Replace with actual OTP
   const navigation = useNavigation();
-  const phoneNumber = useSelector(state => state.auth.mobileNumber)
-  const accessToken = useSelector(state => state.auth.accessToken)
   const [login, setLogin] = useState(false);
   const [pin, setPin] = useState("");
   const dispatch = useDispatch();
 
   const handleOTPComplete = async (otp) => {
+    const phoneNumber = await MOBILE_NO()
     const userData = {
       country_code: "91",
       phone: phoneNumber,
@@ -46,6 +46,7 @@ const VerificationOtpSignUp = () => {
   };
 
   const handleResendOTP = async() => {
+    const phoneNumber = await MOBILE_NO()
     const userData = {
       country_code: "91",
       phone: phoneNumber,

@@ -11,9 +11,6 @@ import PhoneInput from "react-native-phone-number-input";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../constants/theme";
 import { Button } from "../components";
-import { useDispatch } from "react-redux";
-import { login, setAccessToken } from "../store/slice/authSlice";
-import { createUser } from "../service/cardbuzzApi";
 import { postCreateUser } from "../hooks/useAuthApi";
 import EncryptedStorage from "react-native-encrypted-storage";
 import { getSharedKeyDecoded } from "../service/utils";
@@ -21,10 +18,8 @@ import { getSharedKeyDecoded } from "../service/utils";
 const OnBoarding = () => {
   const navigation = useNavigation();
   const [value, setValue] = useState("");
-  const [formattedValue, setFormattedValue] = useState("");
   const [valid, setValid] = useState(null);
   const phoneInput = useRef(null);
-  const dispatch = useDispatch();
 
   const redirect = async () => {
     const accessToken = await EncryptedStorage.getItem("jwt_access_token");
@@ -52,9 +47,8 @@ const OnBoarding = () => {
     };
     const response = await postCreateUser(user_data);
     if (response) {
-      dispatch(login({ mobileNumber: value }));
       setValue("");
-      setFormattedValue("");
+      await EncryptedStorage.setItem("mobile_no", value)
       navigation.navigate("VerificationOtpSignUp");
     }
   };
@@ -78,16 +72,14 @@ const OnBoarding = () => {
           Seamless Payments, Endless Possibilities.
         </Text>
         <Text style={styles.headerPara}>
-          Transact with Trust, Powered by CardBuzz.
+          Transact with Trust, Powered by Payline.
         </Text>
       </View>
     );
   }
 
-  // TODO: Add error tag
   function renderTextInput() {
     const phoneInputBorderColor = COLORS.ButtonBorder;
-    //   valid === false ? COLORS.Error : COLORS.ButtonBorder;
 
     return (
       <View style={{ marginBottom: 20, marginHorizontal: 16 }}>
@@ -107,9 +99,6 @@ const OnBoarding = () => {
             layout="second"
             onChangeText={(text) => {
               setValue(text);
-            }}
-            onChangeFormattedText={(text) => {
-              setFormattedValue(text);
             }}
             withDarkTheme
             placeholder="9999999999"

@@ -9,7 +9,7 @@ import {
   SuccessfulPinSet,
   AddDetails,
   UploadPicture,
-  KycForm,
+  BusinessKyc,
   KycSuccess,
   PopUpKycSuccess,
   BroadBand,
@@ -92,7 +92,7 @@ const AppNavigator = () => {
       <Stack.Screen name="AddDetails" component={AddDetails} />
       <Stack.Screen name="UploadPicture" component={UploadPicture} />
       {/* //TODO: KYC PAGE NOT COMPLETED WITH UI  */}
-      <Stack.Screen name="KycForm" component={KycForm} />
+      <Stack.Screen name="BusinessKyc" component={BusinessKyc} />
       <Stack.Screen name="KycSuccess" component={KycSuccess} />
 
       {/* -------------------------Success/Error/Warning Popup-------------------------------- */}

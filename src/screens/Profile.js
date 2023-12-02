@@ -16,15 +16,15 @@ import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import { saveImageUrl } from "../store/slice/authSlice";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import { MOBILE_NO } from "../constants/DeviceInfo";
 
 const Profile = () => {
   const navigation = useNavigation();
   const { showActionSheetWithOptions } = useActionSheet();
   const [open, setOpen] = useState(false);
 
-  const image = useSelector((state) => state.auth.imageUrl);
+  const image = useSelector((state) => state.auth.imageUrl.uri);
   const name = useSelector((state) => state.user.fullName);
-  const contactInfo = useSelector((state) => state.auth.mobileNumber);
   const dispatch = useDispatch();
 
   const checkForCameraRollPermission = async () => {
@@ -120,7 +120,7 @@ const Profile = () => {
 
         <View style={{ marginLeft: 20, flex: 1, justifyContent: "flex-start" }}>
           <Text style={styles.userName}>{name}</Text>
-          <Text style={styles.contactInfo}>{contactInfo}</Text>
+          <Text style={styles.contactInfo}>{MOBILE_NO()}</Text>
         </View>
       </View>
     );

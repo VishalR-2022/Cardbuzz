@@ -32,31 +32,25 @@ const Home = () => {
   const dispatch = useDispatch();
 
   console.log(userData, ">>>>>>>>>>>>>>>> name", userName);
-  // const getUserInfo = async () => {
-  //   let data = {};
-  //   await loadServerPubKey();
-  //   const response = await getUserProfile();
-  //   console.log(response, ">>>>>>>>>>>>>>>>>>>> datattatatdtatdta");
-  //   if (response.data) {
-  //     data = {
-  //       ...response.data,
-  //       name: data.fullName,
-  //       bank_acc_number: data.accountNumberCheck,
-  //       bank_acc_ifsc: data.ifscCode,
-  //       pincode: data.pinCode,
-  //       address1: data.address,
-  //       bank_name: data.bankName,
-  //     };
-  //     dispatch(setUserDetails(data));
-  //   }
-  // };
-  // useEffect(() => {
-  //   setUserData(userName);
-  // }, [userName]);
 
-  // useEffect(() => {
-  //   getUserInfo();
-  // }, []);
+  const getUserInfo = async () => {
+    let data = {};
+    const response = await getUserProfile();
+    if (response.data) {
+      data = {
+        ...response.data,
+      };
+      dispatch(setUserDetails(data));
+    }
+  };
+
+  useEffect(() => {
+    setUserData(userName);
+  }, [userName]);
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
 
   const QrViewButton = () => {
     return (
@@ -104,7 +98,7 @@ const Home = () => {
           <View style={styles.uploadContainer}>
             {image && (
               <Image
-                source={{ uri: image }}
+                source={{ uri: image.uri }}
                 style={{ width: 40, height: 40 }}
               />
             )}

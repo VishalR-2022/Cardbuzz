@@ -1,55 +1,5 @@
-import { DEVICE_ID, PUBLIC_KEY } from "../../constant";
 import { httpClientAgent } from "../../httpClientAgent";
-const { encPayload, encKey } = require("../../utils");
-
-// ----------------------------------------------
-// ----------------------------------------------
-
-// async function reqPostForm(key, access_token) {
-//   let formData = new FormData();
-//   formData.append('image', fs.createReadStream('/Users/macbook/Desktop/Screenshot.png'));
-//   const p = {
-//     name: "Mr X Delhi",
-//     bank_acc_number: "000598120021000",
-//     bank_acc_ifsc: "HDFC0000001",
-//     business_name: "Kabari Shop",
-//     turnover: 2000000,
-//     ownership_type: "PROPRIETARY",
-//     city: "Belgaum",
-//     district: "Belgaum",
-//     state: "Maharashtra",
-//     pincode: "591244",
-//     latitude: "25",
-//     longitude: "76",
-//     address1: "My Address 11",
-//     address2: "My address 22",
-//     dob: (str = "01\/01\/1981"),
-//   };
-
-//   const data = encPayload(p, key);
-//   formData.append('body', data.cipherText);
-  
-//   const config = {
-//     method: "post",
-//     url: `/profile`,
-//     params: {
-//       ts: +new Date(),
-//     },
-//     data: formData,
-//     headers: {
-//       Authorization: `Bearer ${access_token}`,
-//     },
-//     signerSecretKey: key,
-//   };
-
-//   try {
-//     let res = await httpClientAgent(config);
-//   } catch (e) {
-//     e = !e; // do nothing with the error
-//   }
-
-//   return;
-// }
+const { encPayload } = require("../../utils");
 
 async function reqGet(key, access_token) {
   const config = {
@@ -66,10 +16,8 @@ async function reqGet(key, access_token) {
     let res = await httpClientAgent(config);
     return res.data;
   } catch (e) {
-    e = !e; // do nothing with the error
+    e = !e;
   }
-
-  return;
 }
 
 async function reqGetQR(key, access_token) {
@@ -87,7 +35,7 @@ async function reqGetQR(key, access_token) {
     let res = await httpClientAgent(config);
     return res.data;
   } catch (e) {
-    e = !e; // do nothing with the error
+    e = !e;
   }
 
   return;
@@ -125,14 +73,48 @@ async function reqPost(key, access_token, userData) {
   return;
 }
 
+async function reqPostPicture(key, access_token, userData) {
 
-async function reqPutKyc(key, access_token) {
+  const imageData ={
+    uri: userData.uri,
+    type: 'image/jpeg',
+    name: 'image.jpg',
+  }
+
+  let formData = new FormData();
+  formData.append('image', imageData);
+  console.log(formData, 'formData');
+
+  const config = {
+    method: "post",
+    url: `/profile/picture`,
+    params: {},
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+      "Content-Type": "multipart/form-data",
+    },
+    data: formData,
+  };
+
+  try {
+    let res = await httpClientAgent(config);
+    console.log(res.data, '????????');
+    return res.data;
+  } catch (e) {
+    console.log(e, '????????');
+    e = !e;
+  }
+}
+
+async function reqPutKyc(key, access_token, userData) {
+  console.log(userData, '>>>>>>>>>>>>>>>>>>> userrr')
   const p = {
-    new_settlement_account_number: "000590100039999",
-    new_settlement_account_ifsc: "HDFC0000002",
+    new_settlement_account_number: userData.bank_acc_number,
+    new_settlement_account_ifsc: userData.bank_acc_ifsc,
+    group: userData.agent_auth_id,
   };
   
-  const data = encPayload(p, key);
+  const data = await encPayload(p);
   const payload = {
     body: data.cipherText,
   };
@@ -156,8 +138,6 @@ async function reqPutKyc(key, access_token) {
     e = !e; // do nothing with the error
     console.log({ status: "FAIL" });
   }
-
-  return;
 }
 
-module.exports = { reqGet, reqPost, reqPutKyc, reqGetQR };
+module.exports = { reqGet, reqPost, reqPutKyc, reqGetQR, reqPostPicture };

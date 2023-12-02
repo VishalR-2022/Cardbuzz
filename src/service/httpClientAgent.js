@@ -1,18 +1,18 @@
 import axios from "axios";
 const {
   SIGNED_HEADERS,
-  DEVICE_ID,
   API_Agent_ENDPOINT,
   JWT_TOKENS,
 } = require("./constant");
 const { sign } = require("./signer");
 import uuid from 'react-native-uuid';
+import { DEVICE_ID } from "../constants/DeviceInfo";
 
 const httpClientAgent = axios.create({
   baseURL: `${API_Agent_ENDPOINT}`,
 });
 
-httpClientAgent.interceptors.request.use((config) => {
+httpClientAgent.interceptors.request.use(async (config) => {
   if (
     !config.headers["Content-Type"] ||
     typeof config.headers["Content-Type"] === "undefined"
@@ -26,9 +26,10 @@ httpClientAgent.interceptors.request.use((config) => {
 
   config.headers["x-date"] = new Date().toISOString().replace(/.\d+Z$/g, "Z");
   config.headers["x-req-id"] = uuid.v4();
-  config.headers["x-device-id"] = DEVICE_ID;
+  config.headers["x-device-id"] = await DEVICE_ID();
   config.headers["Accept"] = "application/json";
 
+  console.log(uuid.v4());
   config.params["ts"] = +new Date();
 
   if ("signerSecretKey" in config && config.signerSecretKey.length > 0) {
@@ -50,8 +51,8 @@ httpClientAgent.interceptors.response.use(
     return resp;
   },
   async (error) => {
-    const err = error.response;
-    console.log(err);
+    const err = error.response.data;
+    console.log(err, 'errrr');
     if (err?.code == 20010) {
       // 401
     }

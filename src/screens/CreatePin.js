@@ -7,10 +7,10 @@ import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import { postCreateUserPin } from "../hooks/useAuthApi";
 import { loadServerPubKey } from "../service/utils";
+import { MOBILE_NO } from "../constants/DeviceInfo";
 
 const CreatePin = ({ route }) => {
   const navigation = useNavigation();
-  const phoneNumber = useSelector((state) => state.auth.mobileNumber);
   const [reset, setReset] = useState(false);
   const [pin, setPin] = useState("");
   const [check, setCheck] = useState("");
@@ -37,6 +37,7 @@ const CreatePin = ({ route }) => {
   };
 
   const handleCreatePin = async () => {
+    const phoneNumber = await MOBILE_NO();
     if (pin !== null) {
       if (pin === check) {
         const userData = {

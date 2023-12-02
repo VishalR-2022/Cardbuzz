@@ -1,4 +1,4 @@
-import { DEVICE_ID, PUBLIC_KEY } from "./constant";
+import { PUBLIC_KEY } from "./constant";
 import XCrypto from "./XCryptoModule";
 
 async function loadServerPubKey() {

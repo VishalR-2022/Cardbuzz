@@ -5,10 +5,23 @@ import AppNavigator from "./src/navigation/AppNavigator"; // Import the AppNavig
 import { NavigationContainer } from "@react-navigation/native";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { loadServerPubKey } from "./src/service/utils";
+import EncryptedStorage from "react-native-encrypted-storage";
+import uuid from "react-native-uuid";
 
 const App = () => {
+  const getDeviceID = async () => {
+    const deviceId = await EncryptedStorage.getItem("device_id");
+    console.log(deviceId, "deviceId");
+    if (!deviceId) {
+      console.log("deviceId created");
+      await EncryptedStorage.setItem("device_id", uuid.v4());
+    }
+    return;
+  };
+
   useEffect(() => {
     loadServerPubKey();
+    getDeviceID();
   }, []);
 
   return (

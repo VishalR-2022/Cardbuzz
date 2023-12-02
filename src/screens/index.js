@@ -6,7 +6,7 @@ import VerificationOtp from "./VerificationOtp";
 import CreatePin from "./CreatePin";
 import SuccessfulPinSet from "./PinSuccessPage";
 import AddDetails from "./AddDetails";
-import KycForm from "./KycForm";
+import BusinessKyc from "./BusinessKyc";
 import UploadPicture from "./UploadPicture";
 import KycSuccess from "./KycSuccess";
 import PopUpKycSuccess from "./Popup/PopUpKycSuccess";
@@ -65,7 +65,7 @@ export {
   CreatePin,
   SuccessfulPinSet,
   AddDetails,
-  KycForm,
+  BusinessKyc,
   UploadPicture,
   KycSuccess,
   PopUpKycSuccess,

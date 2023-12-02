@@ -10,13 +10,11 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { BackButton, BoxTextField, Button } from "../components";
 import { AndroidSafeArea, COLORS } from "../constants/theme";
 import { useNavigation } from "@react-navigation/native";
-import { useSelector } from "react-redux";
+import { MOBILE_NO } from "../constants/DeviceInfo";
 // import { postLoginViaPin, postLogout, postResetPin, postVerifyPin } from "../hooks/useAuthApi";
 
 const PinLogin = () => {
   const navigation = useNavigation();
-  const password = useSelector((state) => state.auth.pin);
-  const phoneNumber = useSelector((state) => state.auth.mobileNumber);
 
   const [pin, setPin] = useState("");
   const [error, setError] = useState(false);
@@ -26,6 +24,7 @@ const PinLogin = () => {
   };
 
   const handleCreatePin = async () => {
+    const phoneNumber = await MOBILE_NO();
     if (pin !== null) {
       const userData = {
         country_code: "91",
