@@ -41,7 +41,7 @@ const EditProfile = () => {
   const setInitialValues = () => {
     setValue("fullName", data.fullName);
     setValue("pinCode", data.pinCode);
-    setValue("address", data.address);
+    setValue("address1", data.address1);
     setValue("bankName", data.bankName);
     setValue("accountNumber", data.accountNumber);
     setValue("accountNumberCheck", data.accountNumber);
@@ -99,7 +99,7 @@ const EditProfile = () => {
         <View style={{ marginBottom: 16 }}>
           <Controller
             control={control}
-            name="address"
+            name="address1"
             defaultValue=""
             nullable
             render={({ field }) => (
@@ -112,8 +112,8 @@ const EditProfile = () => {
               />
             )}
           />
-          {errors.address && (
-            <Text style={styles.errorText}>{errors.address.message}</Text>
+          {errors.address1 && (
+            <Text style={styles.errorText}>{errors.address1.message}</Text>
           )}
         </View>
         <Divider color="#DDDDDD" />

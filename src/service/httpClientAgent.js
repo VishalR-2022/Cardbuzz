@@ -19,17 +19,12 @@ httpClientAgent.interceptors.request.use(async (config) => {
   ) {
     config.headers["Content-Type"] = "application/json";
   }
-  // console.log(
-  //   ">>>>>>>>>>>>>>>>>>>> config.headers=",
-  //   Buffer.byteLength(JSON.stringify(config.data))
-  // );
 
   config.headers["x-date"] = new Date().toISOString().replace(/.\d+Z$/g, "Z");
   config.headers["x-req-id"] = uuid.v4();
   config.headers["x-device-id"] = await DEVICE_ID();
   config.headers["Accept"] = "application/json";
 
-  console.log(uuid.v4());
   config.params["ts"] = +new Date();
 
   if ("signerSecretKey" in config && config.signerSecretKey.length > 0) {
@@ -47,16 +42,14 @@ httpClientAgent.interceptors.request.use(async (config) => {
 
 httpClientAgent.interceptors.response.use(
   (resp) => {
-    console.log(resp, '>>>>>>>>>>>>>>>>>>>> success');
+    console.log('>>>>>>>>>>>>>>>>>>>> success');
     return resp;
   },
   async (error) => {
-    const err = error.response.data;
-    console.log(err, 'errrr');
-    if (err?.code == 20010) {
-      // 401
+    const err = error?.response?.data;
+    if (err.includes(`'code': 20010`)) {
+      return 'refetch_access'
     }
-
     return Promise.reject(error);
   }
 );

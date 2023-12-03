@@ -13,9 +13,12 @@ Y3ZWKWkvNncQiDniZhLjEO67+zFHufPey/fo5UnL4d6nXpxnU7NBBx+RJOi0DNid
 ZwIDAQAB
 -----END PUBLIC KEY-----`;
 
+const API_BBPS_ENDPOINT = 'https://ybl-bbps.svc.steady-rabbit.com/api/v1'
+
 module.exports = {
   SIGNED_HEADERS: SIGNED_HEADERS,
   API_ENDPOINT: API_ENDPOINT,
   API_Agent_ENDPOINT: API_Agent_ENDPOINT,
   PUBLIC_KEY: publicKey,
+  API_BBPS_ENDPOINT: API_BBPS_ENDPOINT
 };

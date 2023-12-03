@@ -56,12 +56,11 @@ const UploadPicture = () => {
   };
 
   const handleNext = async () => {
-    if (image !== null) {
-      const response = await postUserProfilePhoto(image)
-      console.log(response, '>>>>>>>>>>>>>>>>>>>> image');
-
-      // navigation.navigate("BusinessKyc");
-    }
+    // if (image !== null) {
+    //   const response = await postUserProfilePhoto(image)
+    //   console.log(response, '>>>>>>>>>>>>>>>>>>>> image');
+    // }
+    navigation.navigate("BusinessKyc");
   };
 
   function renderTop() {

@@ -67,7 +67,7 @@ const broadbandOperators = [
 const CableDth = () => {
   return (
     <SelectOperator
-      data={broadbandOperators}
+      data={'DTH'}
       backButtonText="Select DTH Operator"
       navigate={"DthRecharge"}
     />

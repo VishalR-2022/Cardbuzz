@@ -14,7 +14,10 @@ async function reqGet(key, access_token) {
 
   try {
     let res = await httpClientAgent(config);
-    return res.data;
+    if(res === 'refetch_access') {
+      return res;
+    }
+    return res?.data;
   } catch (e) {
     e = !e;
   }
@@ -45,7 +48,7 @@ async function reqPost(key, access_token, userData) {
   /**
    * {"partnerReferenceNo":"CARDBUZZ12345","actionName":"ADD_PARTNER_SELLER",
    * "partnerKey":"XXXXXX","p1":"Barber Shop","p2":"Mr Rahul S","p3":"ABC123","p4":"XXXXXXX","p5":"XXXXXXXXX","p6":"1520","p7":"SMALL","p8":"OFFLINE","p9":"PROPRIETARY","p10":"Belgaum","p11":"Belgaum","p12":"29","p13":"591244","p14":"","p15":null,"p16":"000590100021000","p17":"HDFC0000001","p18":"20.23","p19":"70.22","p20":"Kalina","p21":"Santacruz East","p22":"","p23":"","p24":"","p25":"","p26":"19\/11\/1995","p27":"19\/11\/2006","p28":""}
-   */
+   */  
   const data = await encPayload(userData);
   const payload = {
     body: data.cipherText,

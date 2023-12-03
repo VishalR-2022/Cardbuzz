@@ -1,8 +1,7 @@
 import { DEVICE_ID } from "../constants/DeviceInfo";
-import { PUBLIC_KEY } from "./constant";
 import { httpClient } from "./httpClient";
 
-import { encPayload, encKey, genX25519KeyPair, getSharedKeyDecoded } from "./utils";
+import { encPayload, encKey, getSharedKeyDecoded, genRSAKeyPair, genRandomKey_b64 } from "./utils";
 //----------------------------- CREATE USER ----------------------------
 
 export async function createUser({ country_code, phone }) {
@@ -37,76 +36,12 @@ export async function createUser({ country_code, phone }) {
   }
 }
 
-// ------------------------------- PIN APIs ---------------------------------
-// export async function createUserPin(
-//   { country_code, phone },
-//   access_token,
-//   pin,
-//   recreate_token = null
-// ) {
-//   const pubKeyPem_b64 = await genX25519KeyPair();
-
-//   let user = {
-//     country_code: country_code,
-//     phone: phone,
-//     device_id: await DEVICE_ID(),
-//     pin: pin,
-//     pub_key: pubKeyPem_b64,
-//   };
-
-//   const data = await encPayload(user);
-
-//   const key = await encKey(data.key);
-
-//   const payload = {
-//     body: data.cipherText,
-//     token: key,
-//   };
-
-//   // send to sever
-//   const config = {
-//     method: "post",
-//     url: null,
-//     params: {},
-//     // body: null,
-//     data: payload,
-//     signerSecretKey: data.key,
-//     headers: {
-//       // Authorization: `Bearer ${access_token}`,
-//     },
-//   };
-
-//   if (
-//     typeof access_token !== "undefined" &&
-//     access_token !== null &&
-//     access_token.length > 0
-//   ) {
-//     config.url = `/pin/create`;
-//     config.headers["Authorization"] = `Bearer ${access_token}`;
-//   } else if (
-//     typeof recreate_token !== "undefined" &&
-//     recreate_token !== null &&
-//     recreate_token.length > 0
-//   ) {
-//     config.url = `/pin/recreate/${recreate_token}`;
-//   }
-
-//   try {
-//     let res = await httpClient(config);
-//     console.log(res.data);
-//   } catch (e) {
-//     e = !e; // HANDLE error
-//     return;
-//   }
-// }
-
-
 export async function createUserPin(
   { country_code, phone },
   access_token,
   pin
 ) {
-  const pubKeyPem_b64 = await genX25519KeyPair();
+  const pubKeyPem_b64 = await genRSAKeyPair();
   let user = {
     country_code: country_code,
     phone: phone,
@@ -413,3 +348,27 @@ export async function resendOTP({ country_code, phone }, access_token) {
     e = !e; // HANDLE error
   }
 }
+
+export const refreshTokenApi = async (refresh_token) => {
+    const secretkey = await genRandomKey_b64()
+    const key = await encKey(secretkey);
+    const config = {
+      method: "get",
+      url: `/user/token/refresh`,
+      params: {
+        token: key,
+      },
+      signerSecretKey: secretkey,
+      headers: {
+        Authorization: `Bearer ${refresh_token}`,
+      },
+    };
+  
+    try {
+      let res = await httpClient(config);
+      return res.data;
+    } catch (e) {
+      console.log(e.toString());
+      e = !e; // HANDLE error
+    }
+  }

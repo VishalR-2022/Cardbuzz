@@ -11,6 +11,17 @@ async function genX25519KeyPair() {
   return kp.pubKeyPem;
 }
 
+async function rsaDecryptSharedKey(shared_key_b64_enc_b64) {
+  // stores the priv key in KeyStore
+  const kp = await XCrypto.rsaDecryptSharedKey(shared_key_b64_enc_b64);
+  return kp.pubKeyPem;
+}
+async function genRSAKeyPair() {
+  // stores the priv key in KeyStore
+  const kp = await XCrypto.genRSAKeyPair();
+  return kp.pubKeyPem;
+}
+
 async function refreshAccessToken(refresh_token) {
   const secretkey = getSharedKeyDecoded();
   const key = encKey(secretkey);
@@ -53,12 +64,6 @@ async function getSharedKeyDecoded() {
   return sharedKeyDecoded_b64;
 }
 
-async function genRandomKey_b64() {
-  const key = await XCrypto.getChaChaKey();
-
-  return key;
-}
-
 async function encKey(data) {
   if (data === null) {
     data = await getSharedKeyDecoded()
@@ -68,6 +73,11 @@ async function encKey(data) {
   // 'LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUNvd0JRWURLMlZ1QXlFQVhCeFY3cWxxMXlGc3RIOThvakp4c0xBTUNiQytncVlNL1BGS0l5MUJ0VXc9Ci0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQo=';
 
   return encryptedData;
+}
+
+async function genRandomKey_b64() {
+  const key = await XCrypto.getChaChaKey();
+  return key;
 }
 
 async function encPayload(data) {
@@ -99,4 +109,7 @@ export {
   getSharedKeyDecoded,
   genX25519KeyPair,
   loadServerPubKey,
+  rsaDecryptSharedKey,
+  genRSAKeyPair,
+  genRandomKey_b64,
 };

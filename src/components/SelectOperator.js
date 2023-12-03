@@ -14,12 +14,14 @@ import Divider from "./Divider";
 import { AndroidSafeArea, COLORS, SIZES } from "../constants/theme";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useNavigation } from "@react-navigation/native";
+import { getBillerCategoryOperator } from "../hooks/useBbpsApi";
 
 const SelectOperator = ({ data, backButtonText, navigate, onPress }) => {
   const navigation = useNavigation();
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredOperators, setFilteredOperators] = useState(data);
-
+  const [filteredOperators, setFilteredOperators] = useState([]);
+  const [operator, setOperator] = useState({});
+  const [loader, setLoader] = useState(false);
   const debounce = (func, delay) => {
     let timer;
     return (...args) => {
@@ -31,15 +33,35 @@ const SelectOperator = ({ data, backButtonText, navigate, onPress }) => {
   };
 
   useEffect(() => {
+    setFilteredOperators(operator);
+  }, [operator]);
+
+  const getOperatorInfo = async () => {
+    const response = await getBillerCategoryOperator(data);
+    if (response) {
+      setOperator(response.biller);
+      console.log(response, "fasttag");
+    }
+    setLoader(false);
+  };
+
+  useEffect(() => {
+    setLoader(true);
+    getOperatorInfo();
+  }, []);
+
+  useEffect(() => {
     const debouncedSearch = debounce((term) => {
       if (term) {
         setFilteredOperators(
-          data.filter((operator) =>
-            operator.name.toLowerCase().includes(term.toLowerCase())
+          operator.filter(
+            (item) =>
+              item.billerAliasName.toLowerCase().includes(term.toLowerCase()) ||
+              item.billerName.toLowerCase().includes(term.toLowerCase())
           )
         );
       } else {
-        setFilteredOperators(data);
+        setFilteredOperators(operator);
       }
     }, 500);
 
@@ -76,31 +98,40 @@ const SelectOperator = ({ data, backButtonText, navigate, onPress }) => {
               />
             </View>
             <Text style={styles.heading}>All Operators</Text>
-            <FlatList
-              scrollEnabled={false}
-              data={filteredOperators}
-              style={{ backgroundColor: COLORS.White, borderRadius: 8 }}
-              renderItem={({ item }) => (
-                <>
-                  <TouchableOpacity
-                    style={styles.operatorItem}
-                    onPress={
-                      onPress
-                        ? onPress
-                        : () =>
-                            navigation.navigate(navigate, {
-                              data: item,
-                            })
-                    }
-                  >
-                    <Image source={item.icon} style={styles.operatorIcon} />
-                    <Text style={styles.operatorName}>{item.name}</Text>
-                  </TouchableOpacity>
-                  <Divider />
-                </>
-              )}
-              keyExtractor={(item) => item.id}
-            />
+            {loader ? (
+              <Text>loading...</Text>
+            ) : (
+              <FlatList
+                scrollEnabled={false}
+                data={filteredOperators}
+                style={{ backgroundColor: COLORS.White, borderRadius: 8 }}
+                renderItem={({ item }) => (
+                  <View key={item.billerId}>
+                    <TouchableOpacity
+                      style={styles.operatorItem}
+                      onPress={
+                        onPress
+                          ? onPress
+                          : () =>
+                              navigation.navigate(navigate, {
+                                data: item,
+                              })
+                      }
+                    >
+                      <Image
+                        source={require("../assets/images/airtel.png")}
+                        style={styles.operatorIcon}
+                      />
+                      <Text style={styles.operatorName}>
+                        {item.billerAliasName || item.billerName}
+                      </Text>
+                    </TouchableOpacity>
+                    <Divider />
+                  </View>
+                )}
+                keyExtractor={(item) => item.id}
+              />
+            )}
           </View>
         </View>
         <Divider color="#DDDDDD" />
@@ -159,8 +190,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   operatorIcon: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     marginRight: 10,
   },
   operatorName: {

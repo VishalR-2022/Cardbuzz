@@ -1,15 +1,21 @@
 import EncryptedStorage from "react-native-encrypted-storage";
-import { reqPost, reqGet, reqPostPicture, reqPutKyc } from "../service/request/userDetailsReq/user_details";
+import {
+  reqPost,
+  reqGet,
+  reqPostPicture,
+  reqPutKyc,
+} from "../service/request/userDetailsReq/user_details";
 import { getSharedKeyDecoded } from "../service/utils";
+import { refreshToken } from "./useAuthApi";
 
-export const postUserProfile = async (data) => {
+export const postUserProfile = async () => {
   const userData = {
-    name: data.fullName,
-    bank_acc_number: data.accountNumberCheck,
-    bank_acc_ifsc: data.ifscCode,
-    business_name: data.businessName,
-    pan_number: data.pan,
-    aadhar_number: data.aadhar,
+    name: "Mr Rahul S",
+    bank_acc_number: "987987987654",
+    bank_acc_ifsc: "SBIN9876017",
+    business_name: "Shop owner",
+    pan_number: "FXHPR2345Q",
+    aadhar_number: "585854585458",
     turnover: 2000000,
     ownership_type: "PROPRIETARY",
     city: "Belgaum",
@@ -38,7 +44,7 @@ export const postUserProfilePhoto = async (data) => {
   const accessToken = await EncryptedStorage.getItem("jwt_access_token");
 
   const response = await reqPostPicture(secretKey, accessToken, data);
-  console.log(response, 'userHook')
+  console.log(response, "userHook");
   if (response?.success === "OK") {
     return true;
   } else {
@@ -50,12 +56,21 @@ export const getUserProfile = async () => {
   const secretKey = await getSharedKeyDecoded();
   const accessToken = await EncryptedStorage.getItem("jwt_access_token");
 
+  console.log(secretKey, "secretKey");
   const response = await reqGet(secretKey, accessToken);
   if (response?.success === "OK") {
     return response;
-  } else {
+  } else if (response === "refetch_access") {
+    const refetch = await refreshToken();
+    if (refetch) {
+      const response = await reqGet(secretKey, accessToken);
+      if (response?.success === "OK") {
+        return response;
+      }
+    }
     return false;
   }
+  return false;
 };
 
 export const putUserProfile = async (data) => {
@@ -69,6 +84,3 @@ export const putUserProfile = async (data) => {
     return false;
   }
 };
-
-
-// {"assetId": null, "base64": null, "duration": null, "exif": null, "height": 3686, "rotation": null, "type": "image", "uri": "file:///data/user/0/com.payline/cache/ImagePicker/6e2db637-999f-4a3a-bc71-6316728c0689.jpeg", "width": 2764}

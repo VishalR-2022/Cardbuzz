@@ -56,68 +56,111 @@ public class XCryptoModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void genX25519KeyPair(Promise promise) {
+  public void genRSAKeyPair(Promise promise) {
     try {
-      byte[][] keyPair = CurveX25519.genKeyPair();
-      WritableMap mp=Arguments.createMap();
+      byte[][] keyPair = RSAUtils.genKeyPair();
+      WritableMap mp = Arguments.createMap();
 
-      String b64PubKey=Base64.getEncoder().encodeToString(keyPair[0]);
+      String b64PubKey = Base64.getEncoder().encodeToString(keyPair[0]);
       String[] parts = new String[3];
-      parts[0]="-----BEGIN PUBLIC KEY-----";
-      parts[1]=b64PubKey;
-      parts[2]="-----END PUBLIC KEY-----";
+      parts[0] = "-----BEGIN PUBLIC KEY-----";
+      parts[1] = b64PubKey;
+      parts[2] = "-----END PUBLIC KEY-----";
 
-      String pubKeyPem= Base64.getEncoder().encodeToString(String.join("\n", parts).getBytes());
+      String pubKeyPem = Base64.getEncoder().encodeToString(String.join("\n", parts).getBytes());
 
-      mp.putString("pubKey",b64PubKey);
-      mp.putString("pubKeyPem",pubKeyPem);
+      mp.putString("pubKey", b64PubKey);
+      mp.putString("pubKeyPem", pubKeyPem);
 
       promise.resolve(mp);
 
-    }catch(Exception e) {
+    } catch (Exception e) {
       promise.reject("Create Event Error", e);
     }
   }
+
+  @ReactMethod
+  public void rsaDecryptSharedKey(String sharedKeyb64Encb64, Promise promise) {
+    try {
+
+      String enryptedKeyB64 = RSAUtils.decryptServerSharedKey(sharedKeyb64Encb64);
+
+      SharedPreferences pref = this.context.getSharedPreferences(SHARED_PREFENCE_NAME, Context.MODE_PRIVATE);
+      SharedPreferences.Editor edit = pref.edit();
+      edit.putString(ENCRYPTEDKEY_KEY, enryptedKeyB64);
+      edit.commit();
+
+      promise.resolve(true);
+    } catch (Exception e) {
+      promise.reject("Create Event Error", e);
+    }
+
+  }
+
+  @ReactMethod
+  public void genX25519KeyPair(Promise promise) {
+    try {
+      byte[][] keyPair = CurveX25519.genKeyPair();
+      WritableMap mp = Arguments.createMap();
+
+      String b64PubKey = Base64.getEncoder().encodeToString(keyPair[0]);
+      String[] parts = new String[3];
+      parts[0] = "-----BEGIN PUBLIC KEY-----";
+      parts[1] = b64PubKey;
+      parts[2] = "-----END PUBLIC KEY-----";
+
+      String pubKeyPem = Base64.getEncoder().encodeToString(String.join("\n", parts).getBytes());
+
+      mp.putString("pubKey", b64PubKey);
+      mp.putString("pubKeyPem", pubKeyPem);
+
+      promise.resolve(mp);
+
+    } catch (Exception e) {
+      promise.reject("Create Event Error", e);
+    }
+  }
+
   @ReactMethod
   public void getSharedKeyDecoded(Promise promise) {
-    try{
-    // this is seriously bad func as it exposes the secret key :|
-    SharedPreferences pref = this.context.getSharedPreferences(SHARED_PREFENCE_NAME, Context.MODE_PRIVATE);
-    String b64EncTextWithIV = pref.getString(ENCRYPTEDKEY_KEY, null);
+    try {
+      // this is seriously bad func as it exposes the secret key :|
+      SharedPreferences pref = this.context.getSharedPreferences(SHARED_PREFENCE_NAME, Context.MODE_PRIVATE);
+      String b64EncTextWithIV = pref.getString(ENCRYPTEDKEY_KEY, null);
 
-    byte[] derivedSharedSecret=null;
-    if (b64EncTextWithIV!=null){
-      SecretKey encSSKey = CryptoUtils.getSecretKeyAES("encryptorkey",false);
-      derivedSharedSecret = CryptoUtils.decryptAESGCM(encSSKey,b64EncTextWithIV);
-    }
-    promise.resolve(Base64.getEncoder().encodeToString(derivedSharedSecret));
-    }catch(Exception e) {
+      byte[] derivedSharedSecret = null;
+      if (b64EncTextWithIV != null) {
+        SecretKey encSSKey = CryptoUtils.getSecretKeyAES("encryptorkey", false);
+        derivedSharedSecret = CryptoUtils.decryptAESGCM(encSSKey, b64EncTextWithIV);
+      }
+      promise.resolve(Base64.getEncoder().encodeToString(derivedSharedSecret));
+    } catch (Exception e) {
       promise.reject("Create Event Error", e);
     }
 
   }
+
   @ReactMethod
-  public void genSharedKey(String b64PubKeyPeerPem,Promise promise) {
-   try{
+  public void genSharedKey(String b64PubKeyPeerPem, Promise promise) {
+    try {
 
-     String pubKeyPem=new String(Base64.getDecoder().decode(b64PubKeyPeerPem.getBytes()));
-     String b64PubKeyPeer = pubKeyPem
-             .replace("-----BEGIN PUBLIC KEY-----", "")
-             .replaceAll(System.lineSeparator(), "")
-             .replace("-----END PUBLIC KEY-----", "");
+      String pubKeyPem = new String(Base64.getDecoder().decode(b64PubKeyPeerPem.getBytes()));
+      String b64PubKeyPeer = pubKeyPem
+          .replace("-----BEGIN PUBLIC KEY-----", "")
+          .replaceAll(System.lineSeparator(), "")
+          .replace("-----END PUBLIC KEY-----", "");
 
+      String enryptedKeyB64 = CurveX25519.genSharedKey(b64PubKeyPeer);
 
-     String enryptedKeyB64 = CurveX25519.genSharedKey(b64PubKeyPeer);
+      SharedPreferences pref = this.context.getSharedPreferences(SHARED_PREFENCE_NAME, Context.MODE_PRIVATE);
+      SharedPreferences.Editor edit = pref.edit();
+      edit.putString(ENCRYPTEDKEY_KEY, enryptedKeyB64);
+      edit.commit();
 
-     SharedPreferences pref = this.context.getSharedPreferences(SHARED_PREFENCE_NAME, Context.MODE_PRIVATE);
-     SharedPreferences.Editor edit = pref.edit();
-     edit.putString(ENCRYPTEDKEY_KEY, enryptedKeyB64);
-     edit.commit();
-
-     promise.resolve(true);
-  }catch(Exception e) {
-    promise.reject("Create Event Error", e);
-  }
+      promise.resolve(true);
+    } catch (Exception e) {
+      promise.reject("Create Event Error", e);
+    }
 
   }
 
@@ -125,69 +168,71 @@ public class XCryptoModule extends ReactContextBaseJavaModule {
   public void getChaChaKey(Promise promise) {
     try {
       SecretKey key = ChaCha20Poly1305.getKey();
-      String key_b64=Base64.getEncoder().encodeToString(key.getEncoded());
+      String key_b64 = Base64.getEncoder().encodeToString(key.getEncoded());
       promise.resolve(String.valueOf(key_b64));
-    }catch(Exception e) {
+    } catch (Exception e) {
       promise.reject("Create Event Error", e);
     }
   }
+
   @ReactMethod
-  public void encryptChaCha(String data,Promise promise) {
+  public void encryptChaCha(String data, Promise promise) {
     try {
-//      SecretKey key=null;
-//      if (key!=""){
-//        byte[] keyBytes = Base64.getDecoder().decode(key);
-//        key = new SecretKeySpec(keyBytes, 0, keyBytes.length, "AES");
-//      }
+      // SecretKey key=null;
+      // if (key!=""){
+      // byte[] keyBytes = Base64.getDecoder().decode(key);
+      // key = new SecretKeySpec(keyBytes, 0, keyBytes.length, "AES");
+      // }
       SharedPreferences pref = this.context.getSharedPreferences(SHARED_PREFENCE_NAME, Context.MODE_PRIVATE);
       String enryptedKeyB64 = pref.getString(ENCRYPTEDKEY_KEY, null);
 
-      byte[][] ret=ChaCha20Poly1305.encrypt(data,enryptedKeyB64);
+      byte[][] ret = ChaCha20Poly1305.encrypt(data, enryptedKeyB64);
 
-      WritableMap mp=Arguments.createMap();
-      mp.putString("cipherText",String.valueOf(Base64.getEncoder().encodeToString(ret[0])));
-      String randomKey=null;
-      if (ret[1]!=null){
-        randomKey=Base64.getEncoder().encodeToString(ret[1]);
+      WritableMap mp = Arguments.createMap();
+      mp.putString("cipherText", String.valueOf(Base64.getEncoder().encodeToString(ret[0])));
+      String randomKey = null;
+      if (ret[1] != null) {
+        randomKey = Base64.getEncoder().encodeToString(ret[1]);
       }
-      mp.putString("key",randomKey);
+      mp.putString("key", randomKey);
 
       promise.resolve(mp);
 
-    }catch(Exception e) {
+    } catch (Exception e) {
       promise.reject("Create Event Error", e);
     }
   }
 
   @ReactMethod
-  public void loadRSAKey(String keyText,Promise promise) {
+  public void loadRSAKey(String keyText, Promise promise) {
     try {
-      PublicKey serverPubKey=RSAUtils.readPublicKeyFromText(keyText);
+      PublicKey serverPubKey = RSAUtils.readPublicKeyFromText(keyText);
       promise.resolve(true);
-    }catch(Exception e) {
+    } catch (Exception e) {
       promise.reject("Create Event Error", e);
     }
 
   }
+
   @ReactMethod
   public void encryptRSA(String data, Promise promise) {
     try {
-      byte[] encryptedText=RSAUtils.encrypt(data);
+      byte[] encryptedText = RSAUtils.encrypt(data);
 
       promise.resolve(String.valueOf(Base64.getEncoder().encodeToString(encryptedText)));
-    }catch(Exception e) {
-      promise.reject("Create Event Error", e);
-    }
-  }
-  @ReactMethod
-  public void verifySignature( String x_hmac_tag, String data,String b64InSignature,  Promise promise) {
-    try {
-      boolean verified=RSAUtils.verifySignature(x_hmac_tag,data,b64InSignature);
-      promise.resolve(verified);
-    }catch(Exception e) {
+    } catch (Exception e) {
       promise.reject("Create Event Error", e);
     }
   }
 
+  @ReactMethod
+  public void verifySignature(String x_hmac_tag, String data, String b64InSignature, Promise promise) {
+    try {
+      boolean verified = RSAUtils.verifySignature(x_hmac_tag, data, b64InSignature);
+      promise.resolve(verified);
+    } catch (Exception e) {
+      promise.reject("Create Event Error", e);
+    }
+  }
 
 }

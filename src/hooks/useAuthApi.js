@@ -13,8 +13,21 @@ import {
   verifyPin,
   loginViaPin,
   logout,
+  refreshTokenApi,
 } from "../service/cardbuzzApi";
-import { genSharedSecret, getSharedKeyDecoded } from "../service/utils";
+import { getSharedKeyDecoded, rsaDecryptSharedKey } from "../service/utils";
+
+// ---------------------- refreshToken -------------
+export const refreshToken = async () => {
+  const refreshToken = await EncryptedStorage.getItem("jwt_refresh_token");
+  const response = await refreshTokenApi(refreshToken);
+  if (response?.access_token) {
+    await EncryptedStorage.setItem("jwt_access_token", response.access_token);
+    return true;
+  } else {
+    return false;
+  }
+}
 
 export const postCreateUser = async (data) => {
   const response = await createUser(data);
@@ -62,7 +75,7 @@ export const postCreateUserPin = async (data) => {
       "jwt_refresh_token",
       response.data.refresh_token
     );
-    await genSharedSecret(response.data.ppk);
+    await rsaDecryptSharedKey(response.data.sk);
     return true;
   } else {
     return false;

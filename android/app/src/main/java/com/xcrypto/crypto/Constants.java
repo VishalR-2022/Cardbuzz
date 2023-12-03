@@ -15,9 +15,9 @@ public final class Constants {
     // restrict instantiation
   }
 
-   static final String MASTER_KEY_ALIAS="cbkey";
-   static final String SHARED_KEY_ALIAS="sharedkey";
-   static final String ENCRYPTOR_KEY_ALIAS="encryptorkey";
-
+  static final String RSA_MASTER_KEY_ALIAS = "cbkey_rsa";
+  static final String MASTER_KEY_ALIAS = "cbkey";
+  static final String SHARED_KEY_ALIAS = "sharedkey";
+  static final String ENCRYPTOR_KEY_ALIAS = "encryptorkey";
 
 }

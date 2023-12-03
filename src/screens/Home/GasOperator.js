@@ -67,7 +67,7 @@ const broadbandOperators = [
 const GasOperator = () => {
   return (
     <SelectOperator
-      data={broadbandOperators}
+      data={'Gas'}
       backButtonText="Select GAS Company"
       navigate={"GasBillRecharge"}
     />

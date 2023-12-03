@@ -23,6 +23,7 @@ import Burger from "./../svg/Burger";
 import { getUserProfile } from "../hooks/useAgentApi";
 import { setUserDetails } from "../store/slice/userSlice";
 import { loadServerPubKey } from "../service/utils";
+import { UserInfoConverter } from "../constants/DeviceInfo";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -31,16 +32,15 @@ const Home = () => {
   const [userData, setUserData] = useState(null);
   const dispatch = useDispatch();
 
-  console.log(userData, ">>>>>>>>>>>>>>>> name", userName);
-
   const getUserInfo = async () => {
     let data = {};
     const response = await getUserProfile();
     if (response.data) {
+      console.log(response.data.kyc_status);
       data = {
         ...response.data,
       };
-      dispatch(setUserDetails(data));
+      dispatch(setUserDetails(UserInfoConverter(data)));
     }
   };
 
@@ -106,7 +106,7 @@ const Home = () => {
           <View
             style={{ marginLeft: 20, flex: 1, justifyContent: "flex-start" }}
           >
-            <Text style={styles.userName}>Amit Thakur</Text>
+            <Text style={styles.userName}>{userData && userData.fullName ? userData.fullName :  "User"}</Text>
             <Text style={styles.welcomeText}>Welcome Back,</Text>
           </View>
           <TouchableOpacity

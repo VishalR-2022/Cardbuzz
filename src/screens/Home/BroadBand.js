@@ -67,7 +67,7 @@ const broadbandOperators = [
 const BroadBand = () => {
   return (
     <SelectOperator
-      data={broadbandOperators}
+      data={'Broadband Postpaid'}
       backButtonText="Select Broadband Operator"
       navigate="BroadBandRecharge"
     />
