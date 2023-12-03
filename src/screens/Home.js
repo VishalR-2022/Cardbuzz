@@ -40,13 +40,10 @@ const Home = () => {
       data = {
         ...response.data,
       };
+      setUserData(UserInfoConverter(data));
       dispatch(setUserDetails(UserInfoConverter(data)));
     }
   };
-
-  useEffect(() => {
-    setUserData(userName);
-  }, [userName]);
 
   useEffect(() => {
     getUserInfo();

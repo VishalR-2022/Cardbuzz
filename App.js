@@ -7,6 +7,8 @@ import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { loadServerPubKey } from "./src/service/utils";
 import EncryptedStorage from "react-native-encrypted-storage";
 import uuid from "react-native-uuid";
+import messaging from '@react-native-firebase/messaging';
+import { getFCMToken } from "./src/constants/PushController";
 
 const App = () => {
   const getDeviceID = async () => {
@@ -22,6 +24,31 @@ const App = () => {
   useEffect(() => {
     loadServerPubKey();
     getDeviceID();
+  }, []);
+
+  useEffect(() => {
+    getFCMToken()
+    messaging().onMessage(async remoteMessage => {
+      console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log('onNotificationOpenedApp: ', JSON.stringify(remoteMessage));
+    });
+
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            JSON.stringify(remoteMessage),
+          );
+        }
+      });
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
+      console.log('Message handled in the background!', remoteMessage);
+    });
   }, []);
 
   return (

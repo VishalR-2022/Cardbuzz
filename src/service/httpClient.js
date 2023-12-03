@@ -24,7 +24,6 @@ httpClient.interceptors.request.use(async (config) => {
   //   Buffer.byteLength(JSON.stringify(config.data))
   // );
 
-  console.log(await DEVICE_ID(), '>>>>>>>>>>>>>>>>>>>>>>> deviceId');
   config.headers["x-date"] = new Date().toISOString().replace(/.\d+Z$/g, "Z");
   config.headers["x-req-id"] = uuid.v4();
   config.headers["x-device-id"] = await DEVICE_ID();

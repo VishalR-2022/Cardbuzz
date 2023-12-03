@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "51514589793",
+    "project_id": "payline-cb",
+    "storage_bucket": "payline-cb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:51514589793:android:7c3ddf7b2ef0c61b09a020",
+        "android_client_info": {
+          "package_name": "com.payline"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGcMxfsXEEQtSy6V3AsPP2KTrRrbdtFVY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

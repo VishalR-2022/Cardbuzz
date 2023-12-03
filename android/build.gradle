@@ -19,7 +19,8 @@ buildscript {
         targetSdkVersion = 33
         frescoVersion =  '2.5.0'
         kotlinVersion =  '1.8.10'
-
+        googlePlayServicesVersion = '+'
+        firebaseVersion = '+'
         if (System.properties['os.arch'] == "aarch64") {
             // For M1 Users we need to use the NDK 24 which added support for aarch64
             ndkVersion = "24.0.8215888"
@@ -36,6 +37,7 @@ buildscript {
     dependencies {
         classpath('com.android.tools.build:gradle:7.4.2')
         classpath('com.facebook.react:react-native-gradle-plugin')
+        classpath 'com.google.gms:google-services:4.4.0'
     }
 }
 

@@ -1,4 +1,5 @@
 import { DEVICE_ID } from "../constants/DeviceInfo";
+import { getFCMToken } from "../constants/PushController";
 import { httpClient } from "./httpClient";
 
 import { encPayload, encKey, getSharedKeyDecoded, genRSAKeyPair, genRandomKey_b64 } from "./utils";
@@ -9,7 +10,7 @@ export async function createUser({ country_code, phone }) {
     country_code: country_code,
     phone: phone,
     device_id: await DEVICE_ID(),
-    fcm_reg_token: "xxx2x-yyyyy",
+    fcm_reg_token: await getFCMToken(),
   };
 
   const data = await encPayload(user);
