@@ -73,7 +73,7 @@ const AppNavigator = () => {
         },
         headerShown: false,
       }}
-      initialRouteName={"UploadPicture"}
+      initialRouteName={"OnBoarding"}
     >
       {/* ---------------------OnBoarding------------------- */}
 

@@ -56,7 +56,7 @@ export const getUserProfile = async () => {
   const secretKey = await getSharedKeyDecoded();
   const accessToken = await EncryptedStorage.getItem("jwt_access_token");
 
-  console.log(secretKey, "secretKey");
+  console.log(accessToken, "secretKey");
   const response = await reqGet(secretKey, accessToken);
   if (response?.success === "OK") {
     return response;

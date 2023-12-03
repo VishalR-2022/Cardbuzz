@@ -67,7 +67,7 @@ const broadbandOperators = [
 const InsuranceOperator = () => {
   return (
     <SelectOperator
-      data={'FastTag'}
+      data={'Mobile Postpaid'}
       backButtonText="Select Insurance Company"
       navigate="InsuranceRecharge"
     />
