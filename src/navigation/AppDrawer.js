@@ -2,7 +2,6 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import {
   History,
   Home,
-  Profile,
   ResetPin,
   AccountSetting,
   PrivacyPolicy,
@@ -29,7 +28,6 @@ const AppDrawerNavigator = () => {
       initialRouteName="Home"
     >
       <Drawer.Screen name="Home" component={Home} />
-      <Drawer.Screen name="Profile" component={Profile} />
       <Drawer.Screen name="History" component={History} />
       <Drawer.Screen name="ResetPin" component={ResetPin} />
       <Drawer.Screen name="AccountSetting" component={AccountSetting} />

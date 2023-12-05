@@ -28,14 +28,14 @@ const Profile = () => {
   const dispatch = useDispatch();
 
   const checkForCameraRollPermission = async () => {
-    const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      alert(
-        "Please grant camera roll permissions inside your system's settings"
-      );
-    } else {
-      console.log("Media Permissions are granted");
-    }
+    // const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
+    // if (status !== "granted") {
+    //   alert(
+    //     "Please grant camera roll permissions inside your system's settings"
+    //   );
+    // } else {
+    //   console.log("Media Permissions are granted");
+    // }
   };
 
   useEffect(() => {
@@ -43,49 +43,49 @@ const Profile = () => {
   }, []);
 
   const addImage = () => {
-    const options = ["Take A New Photo", "Select Photo From Device", "Dismiss"];
-    const cancelButtonIndex = 2;
-    const destructiveButtonIndex = 2;
-    const textStyle = { textAlign: "center" };
-    const showSeparators = true;
-    const containerStyle = {
-      backgroundColor: COLORS.White, // Adjust the background color
-      borderRadius: 10, // Adjust the border radius
-    };
+    // const options = ["Take A New Photo", "Select Photo From Device", "Dismiss"];
+    // const cancelButtonIndex = 2;
+    // const destructiveButtonIndex = 2;
+    // const textStyle = { textAlign: "center" };
+    // const showSeparators = true;
+    // const containerStyle = {
+    //   backgroundColor: COLORS.White, // Adjust the background color
+    //   borderRadius: 10, // Adjust the border radius
+    // };
 
-    showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex,
-        destructiveButtonIndex,
-        textStyle,
-        showSeparators,
-        containerStyle,
-      },
-      async (buttonIndex) => {
-        if (buttonIndex === 0) {
-          let _image = await ImagePicker.launchCameraAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            quality: 1,
-            cameraType: "front",
-          });
-          console.log(JSON.stringify(_image));
-          if (!_image.canceled) {
-            dispatch(saveImageUrl({ imageUrl: _image.assets[0].uri }));
-          }
-        } else if (buttonIndex === 1) {
-          let _image = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            quality: 1,
-          });
-          if (!_image.cancelled) {
-            dispatch(saveImageUrl({ imageUrl: _image.uri }));
-          }
-        }
-      }
-    );
+    // showActionSheetWithOptions(
+    //   {
+    //     options,
+    //     cancelButtonIndex,
+    //     destructiveButtonIndex,
+    //     textStyle,
+    //     showSeparators,
+    //     containerStyle,
+    //   },
+    //   async (buttonIndex) => {
+    //     if (buttonIndex === 0) {
+    //       let _image = await ImagePicker.launchCameraAsync({
+    //         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //         allowsEditing: true,
+    //         quality: 1,
+    //         cameraType: "front",
+    //       });
+    //       console.log(JSON.stringify(_image));
+    //       if (!_image.canceled) {
+    //         dispatch(saveImageUrl({ imageUrl: _image.assets[0].uri }));
+    //       }
+    //     } else if (buttonIndex === 1) {
+    //       let _image = await ImagePicker.launchImageLibraryAsync({
+    //         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //         allowsEditing: true,
+    //         quality: 1,
+    //       });
+    //       if (!_image.cancelled) {
+    //         dispatch(saveImageUrl({ imageUrl: _image.uri }));
+    //       }
+    //     }
+    //   }
+    // );
   };
 
   function renderTop() {

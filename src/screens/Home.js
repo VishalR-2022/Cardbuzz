@@ -28,7 +28,6 @@ import { UserInfoConverter } from "../constants/DeviceInfo";
 const Home = () => {
   const navigation = useNavigation();
   const image = useSelector((state) => state.auth.imageUrl);
-  const userName = useSelector((state) => state.user);
   const [userData, setUserData] = useState(null);
   const dispatch = useDispatch();
 
@@ -36,7 +35,7 @@ const Home = () => {
     let data = {};
     const response = await getUserProfile();
     if (response.data) {
-      console.log(response.data.kyc_status);
+      console.log(response.data.kyc_status, 'status');
       data = {
         ...response.data,
       };

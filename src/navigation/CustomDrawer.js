@@ -29,6 +29,7 @@ const CustomDrawer = (props) => {
   const navigation = useNavigation();
   const [open, setOpen] = useState(false);
   const image = useSelector((state) => state.auth.imageUrl);
+  const userData = useSelector((state) => state.user);
 
   const closeDrawer = () => {
     props.navigation.closeDrawer(); // Close the drawer
@@ -65,7 +66,7 @@ const CustomDrawer = (props) => {
           <View
             style={{ marginLeft: 8, flex: 1, justifyContent: "flex-start" }}
           >
-            <Text style={styles.userName}>Amit Thakur</Text>
+            <Text style={styles.userName}>{userData && userData.fullName ? userData.fullName :  "User"}</Text>
             <Text style={styles.welcomeText}>Welcome Back,</Text>
           </View>
         </View>

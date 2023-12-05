@@ -3,7 +3,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import {
   WalletPayment,
-  MainLayout,
   OnBoarding,
   CreatePin,
   SuccessfulPinSet,
@@ -101,7 +100,6 @@ const AppNavigator = () => {
       {/* -----------------MAIN PAGE LAYOUTS--------------------- */}
 
       <Stack.Screen name="Root" component={AppDrawerNavigator} />
-      <Stack.Screen name="MainLayout" component={MainLayout} />
 
       {/* ---------------------HOME: ---------------- */}
       <Stack.Screen name="WalletPayment" component={WalletPayment} />

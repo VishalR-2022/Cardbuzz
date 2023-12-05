@@ -47,7 +47,6 @@ const OnBoarding = () => {
     };
     const response = await postCreateUser(user_data);
     if (response) {
-      setValue("");
       await EncryptedStorage.setItem("mobile_no", value)
       navigation.navigate("VerificationOtpSignUp");
     }

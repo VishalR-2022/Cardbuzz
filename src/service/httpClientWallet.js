@@ -1,17 +1,17 @@
 import axios from "axios";
-const {
+import {
   SIGNED_HEADERS,
-  API_Agent_ENDPOINT,
-} = require("./constant");
-const { sign } = require("./signer");
+  API_WALLET_ENDPOINT,
+} from "./constant";
+import  { sign } from "./signer";
 import uuid from 'react-native-uuid';
 import { DEVICE_ID } from "../constants/DeviceInfo";
 
-const httpClientAgent = axios.create({
-  baseURL: `${API_Agent_ENDPOINT}`,
+const httpClientWallet = axios.create({
+  baseURL: `${API_WALLET_ENDPOINT}`,
 });
 
-httpClientAgent.interceptors.request.use(async (config) => {
+httpClientWallet.interceptors.request.use(async (config) => {
   if (
     !config.headers["Content-Type"] ||
     typeof config.headers["Content-Type"] === "undefined"
@@ -22,11 +22,10 @@ httpClientAgent.interceptors.request.use(async (config) => {
   config.headers["x-date"] = new Date().toISOString().replace(/.\d+Z$/g, "Z");
   config.headers["x-req-id"] = uuid.v4();
   config.headers["x-device-id"] = await DEVICE_ID();
-  // config.headers["Accept"] = "application/json";
+  config.headers["Accept"] = "application/json";
 
   config.params["ts"] = +new Date();
 
-  console.log('jahsjdahsdjhasjdhajshdjsahdja');
   if ("signerSecretKey" in config && config.signerSecretKey.length > 0) {
     const x_hmac_tag = sign(
       config,
@@ -40,19 +39,18 @@ httpClientAgent.interceptors.request.use(async (config) => {
   return config;
 });
 
-httpClientAgent.interceptors.response.use(
+httpClientWallet.interceptors.response.use(
   (resp) => {
     console.log('>>>>>>>>>>>>>>>>>>>> success');
     return resp;
   },
   async (error) => {
-    const err = error;
-    console.log(error, 'errrrrr')
-    // if (err.includes(`'code': 20010`)) {
-    //   return 'refetch_access'
-    // }
+    const err = error?.response?.data;
+    if (err.includes(`'code': 20010`)) {
+      return 'refetch_access'
+    }
     return Promise.reject(error);
   }
 );
 
-module.exports = { httpClientAgent };
+export default httpClientWallet;

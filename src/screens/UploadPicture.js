@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import { Text, StyleSheet, SafeAreaView, View, Image } from "react-native";
+import { Text, StyleSheet, SafeAreaView, View, Image, PermissionsAndroid } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Button } from "../components";
 import { AndroidSafeArea, COLORS } from "../constants/theme";
 import { useNavigation } from "@react-navigation/native";
 import BackButton from "../components/BackButton";
-import * as ImagePicker from "expo-image-picker";
+import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import { useSelector, useDispatch } from "react-redux";
 import { saveImageUrl } from "../store/slice/authSlice";
 import { postUserProfilePhoto } from "../hooks/useAgentApi";
@@ -15,52 +15,76 @@ const UploadPicture = () => {
 
   const image = useSelector((state) => state.auth.imageUrl);
   const dispatch = useDispatch();
-  const checkForCameraRollPermission = async () => {
-    const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      alert(
-        "Please grant camera roll permissions inside your system's settings"
+  const requestCameraPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: "App Camera Permission",
+          message:"App needs access to your camera ",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK"
+        }
       );
-    } else {
-      console.log("Media Permissions are granted");
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log("Camera permission given");
+      } else {
+        console.log("Camera permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
     }
   };
 
   useEffect(() => {
-    checkForCameraRollPermission();
+    requestCameraPermission();
   }, []);
 
-  const addImage = async () => {
-    let _image = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
+  const handleCameraLaunch = () => {
+    const options = {
+      mediaType: 'photo',
+      includeBase64: false,
+      maxHeight: 2000,
+      maxWidth: 2000,
+    };
+  
+    launchCamera(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled camera');
+      } else if (response.error) {
+        console.log('Camera Error: ', response.error);
+      } else {
+        dispatch(saveImageUrl({ imageUrl: response.assets?.[0] }));
+      }
     });
-    console.log(JSON.stringify(_image));
-    if (!_image.canceled) {
-      dispatch(saveImageUrl({ imageUrl: _image.assets[0] }));
-    }
-  };
+  }
 
-  const openCamera = async () => {
-    let _image = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-      cameraType: "front",
+  const openImagePicker = () => {
+    const options = {
+      mediaType: "photo",
+      includeBase64: false,
+      maxHeight: 2000,
+      maxWidth: 2000,
+    };
+
+    launchImageLibrary(options, (response) => {
+      if (response.didCancel) {
+        console.log("User cancelled image picker");
+      } else if (response.error) {
+        console.log("Image picker error: ", response.error);
+      } else {
+        dispatch(saveImageUrl({ imageUrl: response.assets?.[0] }));
+      }
     });
-    console.log(JSON.stringify(_image));
-    if (!_image.canceled) {
-      dispatch(saveImageUrl({ imageUrl: _image.assets[0] }));
-    }
-  };
+  }
 
   const handleNext = async () => {
-    // if (image !== null) {
-    //   const response = await postUserProfilePhoto(image)
-    //   console.log(response, '>>>>>>>>>>>>>>>>>>>> image');
-    // }
-    navigation.navigate("BusinessKyc");
+    if (image !== null) {
+      console.log(image, ">>>>>>>>>>>>>>>>>>>> image");
+      const response = await postUserProfilePhoto(image);
+    }
+    // navigation.navigate("BusinessKyc");
   };
 
   function renderTop() {
@@ -93,13 +117,13 @@ const UploadPicture = () => {
             text="Take a new Photo"
             outlined
             width={"90%"}
-            onPress={openCamera}
+            onPress={handleCameraLaunch}
           />
           <Button
             text="Select Photo from device"
             outlined
             width={"90%"}
-            onPress={addImage}
+            onPress={openImagePicker}
           />
         </View>
       </View>

@@ -105,7 +105,7 @@ const AddDetails = () => {
                 <TextField
                   value={field.value}
                   onChangeText={field.onChange}
-                  placeholder="Address Line 1"
+                  placeholder="City"
                 />
               )}
             />
@@ -118,7 +118,7 @@ const AddDetails = () => {
                 <TextField
                   value={field.value}
                   onChangeText={field.onChange}
-                  placeholder="Address Line 2"
+                  placeholder="Address"
                 />
               )}
             />
@@ -131,19 +131,18 @@ const AddDetails = () => {
               defaultValue=""
               rules={{
                 required: "Account Number is required",
-                minLength: {
-                  value: 12,
-                  message: "Account Number must be 12 digits",
-                },
-                maxLength: {
-                  value: 12,
-                  message: "Account Number must be 12 digits",
+                pattern: {
+                  value: /^[0-9]{9,18}$/,
+                  message:
+                    "Account Number must be between 9 and 18 digits and contain only numeric characters",
                 },
               }}
               render={({ field }) => (
                 <TextField
                   value={field.value}
                   onChangeText={field.onChange}
+                  maxLength={18}
+                  minLength={9}
                   placeholder="Account Number"
                   keyboardType="numeric"
                 />
@@ -160,13 +159,10 @@ const AddDetails = () => {
               defaultValue=""
               rules={{
                 required: "Account Number is required",
-                minLength: {
-                  value: 12,
-                  message: "Account Number must be 12 digits",
-                },
-                maxLength: {
-                  value: 12,
-                  message: "Account Number must be 12 digits",
+                pattern: {
+                  value: /^[0-9]{9,18}$/,
+                  message:
+                    "Account Number must be between 9 and 18 digits and contain only numeric characters",
                 },
                 validate: (value) =>
                   value === "" || value === getValues("accountNumber")
@@ -179,6 +175,8 @@ const AddDetails = () => {
                   onChangeText={field.onChange}
                   placeholder="Verify Account Number"
                   keyboardType="numeric"
+                  maxLength={18}
+                  minLength={9}
                 />
               )}
             />
@@ -193,6 +191,7 @@ const AddDetails = () => {
               defaultValue=""
               rules={{
                 required: "IFSC Code is required",
+                maxLength: 11, // Limit input length to 11 characters
                 pattern: {
                   value: /^[A-Za-z]{4}\d{7}$/,
                   message: "Invalid IFSC Code",
@@ -203,6 +202,8 @@ const AddDetails = () => {
                   value={field.value}
                   onChangeText={field.onChange}
                   placeholder="IFSC Code"
+                  autoCapitalize='characters'
+                  maxLength={11}
                 />
               )}
             />

@@ -1,6 +1,4 @@
-import MainLayout from "./MainLayout";
 import Home from "./Home";
-import Profile from "./Profile";
 import OnBoarding from "./OnBoarding";
 import VerificationOtp from "./VerificationOtp";
 import CreatePin from "./CreatePin";
@@ -57,8 +55,6 @@ import EditFormOtpVerification from "./EditFormOtp";
 
 export {
   Home,
-  MainLayout,
-  Profile,
   WalletPayment,
   OnBoarding,
   VerificationOtp,

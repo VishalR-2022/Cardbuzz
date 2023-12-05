@@ -8,16 +8,17 @@ import {
 import { getSharedKeyDecoded } from "../service/utils";
 import { refreshToken } from "./useAuthApi";
 
-export const postUserProfile = async () => {
+export const postUserProfile = async (data) => {
+  console.log(data)
   const userData = {
-    name: "Mr Rahul S",
-    bank_acc_number: "987987987654",
-    bank_acc_ifsc: "SBIN9876017",
+    name: data.fullName,
+    bank_acc_number: data.accountNumber,
+    bank_acc_ifsc: data.ifscCode,
     business_name: "Shop owner",
-    pan_number: "FXHPR2345Q",
-    aadhar_number: "585854585458",
-    turnover: 2000000,
-    ownership_type: "PROPRIETARY",
+    pan_number: data.pan,
+    aadhar_number: data.aadhar,
+    turnover: data.turnover,
+    ownership_type: data.ownershipType,
     city: "Belgaum",
     district: "Belgaum",
     state: "Maharashtra",
@@ -42,9 +43,9 @@ export const postUserProfile = async () => {
 export const postUserProfilePhoto = async (data) => {
   const secretKey = await getSharedKeyDecoded();
   const accessToken = await EncryptedStorage.getItem("jwt_access_token");
+  console.log(data, "userHook");
 
   const response = await reqPostPicture(secretKey, accessToken, data);
-  console.log(response, "userHook");
   if (response?.success === "OK") {
     return true;
   } else {
@@ -63,7 +64,8 @@ export const getUserProfile = async () => {
   } else if (response === "refetch_access") {
     const refetch = await refreshToken();
     if (refetch) {
-      const response = await reqGet(secretKey, accessToken);
+      const accessTokenRefetched = await EncryptedStorage.getItem("jwt_access_token");
+      const response = await reqGet(secretKey, accessTokenRefetched);
       if (response?.success === "OK") {
         return response;
       }
