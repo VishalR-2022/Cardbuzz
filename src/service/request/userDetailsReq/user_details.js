@@ -77,7 +77,7 @@ async function reqPost(key, access_token, userData) {
   return;
 }
 
-async function reqPostPicture(key, access_token, userData) {
+async function reqPostPicture(access_token, userData) {
 
   const imageData ={
     uri: userData.uri,
@@ -86,7 +86,7 @@ async function reqPostPicture(key, access_token, userData) {
   }
 
   let formData = new FormData();
-  formData.append('image', userData, 'image.jpg');
+  formData.append('image', userData);
   console.log(JSON.stringify(formData), 'formData');
 
   const config = {

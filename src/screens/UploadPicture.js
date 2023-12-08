@@ -82,9 +82,9 @@ const UploadPicture = () => {
   const handleNext = async () => {
     if (image !== null) {
       console.log(image, ">>>>>>>>>>>>>>>>>>>> image");
-      const response = await postUserProfilePhoto(image);
+      // const response = await postUserProfilePhoto(image);
     }
-    // navigation.navigate("BusinessKyc");
+    navigation.navigate("BusinessKyc");
   };
 
   function renderTop() {

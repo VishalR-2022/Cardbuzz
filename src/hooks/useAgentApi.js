@@ -11,14 +11,14 @@ import { refreshToken } from "./useAuthApi";
 export const postUserProfile = async (data) => {
   console.log(data)
   const userData = {
-    name: data.fullName,
+    name: "Mr Rahul S",
     bank_acc_number: data.accountNumber,
-    bank_acc_ifsc: data.ifscCode,
+    bank_acc_ifsc: "SBIN9876017",
     business_name: "Shop owner",
-    pan_number: data.pan,
-    aadhar_number: data.aadhar,
-    turnover: data.turnover,
-    ownership_type: data.ownershipType,
+    pan_number: "FXHPR2345Q",
+    aadhar_number: "585854585458",
+    turnover: 2000000,
+    ownership_type: "PROPRIETARY",
     city: "Belgaum",
     district: "Belgaum",
     state: "Maharashtra",
@@ -41,11 +41,10 @@ export const postUserProfile = async (data) => {
 };
 
 export const postUserProfilePhoto = async (data) => {
-  const secretKey = await getSharedKeyDecoded();
   const accessToken = await EncryptedStorage.getItem("jwt_access_token");
   console.log(data, "userHook");
 
-  const response = await reqPostPicture(secretKey, accessToken, data);
+  const response = await reqPostPicture(accessToken, data);
   if (response?.success === "OK") {
     return true;
   } else {

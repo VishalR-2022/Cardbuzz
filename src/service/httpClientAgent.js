@@ -22,11 +22,10 @@ httpClientAgent.interceptors.request.use(async (config) => {
   config.headers["x-date"] = new Date().toISOString().replace(/.\d+Z$/g, "Z");
   config.headers["x-req-id"] = uuid.v4();
   config.headers["x-device-id"] = await DEVICE_ID();
-  // config.headers["Accept"] = "application/json";
+  config.headers["Accept"] = "application/json";
 
   config.params["ts"] = +new Date();
 
-  console.log('jahsjdahsdjhasjdhajshdjsahdja');
   if ("signerSecretKey" in config && config.signerSecretKey.length > 0) {
     const x_hmac_tag = sign(
       config,
@@ -46,11 +45,11 @@ httpClientAgent.interceptors.response.use(
     return resp;
   },
   async (error) => {
-    const err = error;
-    console.log(error, 'errrrrr')
-    // if (err.includes(`'code': 20010`)) {
-    //   return 'refetch_access'
-    // }
+    const err = error?.response?.data;
+    console.log(error.response.data, 'errrrrr')
+    if (err.includes(`'code': 20010`)) {
+      return 'refetch_access'
+    }
     return Promise.reject(error);
   }
 );

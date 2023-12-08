@@ -20,7 +20,7 @@ const BusinessKyc = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const userData = { ...data, ...userDetails };
+    const userData = { ...data, ...userDetails, aadhar: data.aadhar.trim() };
     console.log(userData, '>>>>>>>>>>>>>>>>>>>>>> userData')
     const response = await postUserProfile(userData);
     if (response) {
